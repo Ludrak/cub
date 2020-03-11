@@ -1,6 +1,6 @@
-[submodule "libvector"]
-	path = libvector
-	url = https://github.com/Ludrak/libvector
-[submodule "libft"]
-	path = libft
+[submodule "lib/libft"]
+	path = lib/libft
 	url = https://github.com/Ludrak/libft
+[submodule "lib/libvector"]
+	path = lib/libvector
+	url = https://github.com/Ludrak/libvector

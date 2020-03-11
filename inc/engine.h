@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/09 19:14:52 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 12:00:55 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,14 @@ typedef struct	s_image
 	int			size_l;
 	int			bpp;
 	int			endian;
+    t_vec2d     size;
 }               t_image;
 
 typedef struct  s_engine
 {
     void        *ptr;
-    t_window    *win;
-    t_image     *buf;
+    t_window    win;
+    t_image     buf;
 }               t_engine;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:51:19 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/09 17:17:35 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 11:32:38 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,18 @@
 # define PROCESS_H
 
 //OVERRIDE THIS IN PROCESS.C
+#include "engine.h"
 
 //  First execution
-void    awake(void *);
+void    awake(t_engine *);
 
 //  Executed right before awake
-void    setup(void *);
+void    setup(t_engine *);
 
 //  Executed at each frame
-int    runtime(void *);
+int    runtime(t_engine *);
 
 //  Executed on exit
-void    p_exit(void *);
+void    p_exit(t_engine *);
 
 #endif
