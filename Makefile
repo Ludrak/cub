@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/03/11 16:09:42 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/03/11 16:24:10 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,17 +33,18 @@ SRC_DIR			= srcs
 SRCS			=	main.c	\
 					process.c	\
 					map_utils.c	\
-					graphics.c
+					graphics.c	\
+					map_parser.c
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT
 BIN_DIR			= bin
 
 
 ##	PUT THE DIRECTORIES OF YOUR HEADER FILES HERE
-HEADERS_DIR		= inc lib/libft lib/libvector lib/libmlx
+HEADERS_DIR		= inc lib/libft lib/libvector lib/libmlx lib/libgnl
 
 ##	HEADERS OF YOUR PROJET /!\ USE FULL PATH FROM CURRENT FOLDER /!\ 
-HEADERS			= inc/engine.h inc/process.h inc/map_utils.h inc/graphics.h
+HEADERS			= inc/engine.h inc/process.h inc/map_utils.h inc/map_parser.h inc/graphics.h
 
 ##	LIBS DIRECTORY OF YOUR PROJECT (USE '-' IF YOUR PROJECT DO NOT USE LIBRARY)
 LIB_DIR			= lib
@@ -62,7 +63,7 @@ OBJS			= $(addprefix $(BIN_DIR)/,$(SRCS:.c=.o))
 INCLUDES		= $(addprefix -I,$(HEADERS_DIR))
 
 ifneq	($(LIB_DIR), -)
-LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libmlx/libmlx.a#$(addprefix $(LIB_DIR)/,$(addsuffix .a,$(addprefix $(LIBS)/,$(LIBS))))
+LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libmlx/libmlx.a lib/libgnl/libgnl.a#$(addprefix $(LIB_DIR)/,$(addsuffix .a,$(addprefix $(LIBS)/,$(LIBS))))
 endif
 
 ##
@@ -159,6 +160,11 @@ $(LIB_DIR)/%/libmlx.a : $(LIB_DIR)/%
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
 
+$(LIB_DIR)/%/libgnl.a : $(LIB_DIR)/%
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+
 
 
 ##
@@ -166,6 +172,10 @@ $(LIB_DIR)/%/libmlx.a : $(LIB_DIR)/%
 ##
 cl : clean
 clean :
+	@$(MAKE) -C lib/libft clean
+	@$(MAKE) -C lib/libvector clean
+	@$(MAKE) -C lib/libgnl clean
+	@$(MAKE) -C lib/libmlx clean
 	@$(RM) $(BIN_DIR)
 	@echo "$(m_REMV) Removed .o files."
 
@@ -177,6 +187,7 @@ fclean : clean
 	@$(RM) $(TARGET_EXE).dSYM
 	@$(MAKE) -C lib/libft fclean
 	@$(MAKE) -C lib/libvector fclean
+	@$(MAKE) -C lib/libgnl fclean
 	@$(MAKE) -C lib/libmlx clean
 	@echo "$(m_REMV) Removed target : '$(TARGET)'"
 

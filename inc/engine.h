@@ -6,22 +6,23 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 12:00:55 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 18:26:09 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <math.h>
-#include "libft.h"
-#include "vectors.h"
-#include "mlx.h"
+# include <stdlib.h>
+# include <stdio.h>
+# include <sys/types.h>
+# include <math.h>
+# include "libft.h"
+# include "vectors.h"
+# include "mlx.h"
 
 # define __PROJECT_NAME "Cub3d - 1.0"
+
 
 
 typedef struct  s_window
@@ -42,11 +43,18 @@ typedef struct	s_image
     t_vec2d     size;
 }               t_image;
 
+# include "map_utils.h"
+
 typedef struct  s_engine
 {
     void        *ptr;
     t_window    win;
     t_image     buf;
+    t_map       map;
 }               t_engine;
+
+# include "graphics.h"
+# include "map_parser.h"
+
 
 #endif

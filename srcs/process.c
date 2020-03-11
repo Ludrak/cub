@@ -6,14 +6,12 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 12:21:25 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 19:52:02 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
-#include "map_utils.h"
 #include "process.h"
-#include "graphics.h"
 #include <stdio.h>
 
 void    awake(t_engine *eng)
@@ -24,6 +22,7 @@ void    awake(t_engine *eng)
 void    setup(t_engine *engine)
 {
 	t_map		*map;
+	int			map_fd;
 
 	//WINDOW SETUP
 	engine->win.size_x	= 1280;	//TODO PARSE
@@ -35,8 +34,23 @@ void    setup(t_engine *engine)
 	engine->buf.size = create_vector(engine->win.size_x, engine->win.size_y);
 	
 	//MAP SETUP
-	map = create_map(10, 10);
-	print_map(*map);
+	if ((map_fd = open("map.cub", O_RDONLY)) > 0)
+	{
+		map = parse_map(map_fd);
+		engine->map = *map;
+		printf("Checking map bounds...\n");
+		if (check_map(engine->map) == 0)
+		{
+			printf("ERROR : INVALID MAP FORMAT\n");
+			p_exit(engine);
+		}
+		else
+		{
+			printf("Valid map format.\n");
+		}
+		
+		close (map_fd);
+	}
 
 	//HOOKS
 	mlx_loop_hook(engine->ptr, runtime, engine);
@@ -51,7 +65,9 @@ int    runtime (t_engine *engine)
 	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr, &engine->buf.bpp, &engine->buf.size_l,
 		&engine->buf.endian);
 
-	draw_rect_to_buffer(&engine->buf, create_vector(1261, 700), create_vector(20, 20), 0xFFFFFF);
+	draw_minimap(&engine->buf, engine->map, create_vector(40, 40));
+
+	//draw_rect_to_buffer(&engine->buf, create_vector(121, 10), create_vector(200, 400), 0xFFFFFF);
 	
 	mlx_put_image_to_window(engine->ptr, engine->win.ptr, engine->buf.img_ptr, 0, 0);
 	return (0);
@@ -61,4 +77,5 @@ void    p_exit (t_engine *engine)
 {
 	free(engine->win.ptr);
 	free(engine);
+	exit(0);
 }
