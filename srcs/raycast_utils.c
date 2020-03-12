@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_utils.h                                        :+:      :+:    :+:   */
+/*   raycast_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/09 19:06:32 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 16:38:26 by lrobino          ###   ########lyon.fr   */
+/*   Created: 2020/03/12 15:38:11 by lrobino           #+#    #+#             */
+/*   Updated: 2020/03/12 15:56:56 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_UTILS_H
-# define MAP_UTILS_H
+#include "raycast.h"
 
-#include "engine.h"
+t_ray       create_ray (t_vec2d start, t_vec2d end)
+{
+    t_ray   ray;
+    ray.start = start;
+    ray.end = end;
+    return (ray);
+}
 
-# define MINIMAP_CUB_SIZ    10
-
-# define CUB_VOID   0
-# define CUB_AIR    1
-# define CUB_BLOCK  2
-
-t_map       *create_map(unsigned int size_x, unsigned int size_y);
-void        destroy_map(t_map *map);
-
-//UTIL
-void        print_map(t_map map);
-void        draw_minimap(t_image *buffer, t_engine engine, t_vec2d pos);
-
-
-#endif
+float ft_map(float value, float min1, float max1, float min2, float max2)
+{
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}

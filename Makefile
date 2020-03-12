@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/03/12 11:30:08 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/03/12 16:14:13 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,10 @@ SRCS			=	main.c			\
 					map_utils.c		\
 					graphics.c		\
 					color_utils.c	\
-					map_parser.c
+					map_parser.c	\
+					raycast.c		\
+					raycast_utils.c	\
+					math_utils.c
 					
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT

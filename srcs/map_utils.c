@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:09 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 11:49:44 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 19:34:59 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,30 +58,33 @@ void        print_map(t_map map)
 }
 
 
-void        draw_minimap(t_image *buffer, t_map map, t_vec2d pos)
+void        draw_minimap(t_image *buffer, t_engine engine, t_vec2d pos)
 {
-    __uint32_t  i;
-    __uint32_t  j;
-    t_vec2d     c_pos;
-    t_color     color;
-    
+    __uint32_t      i;
+    __uint32_t      j;
+    t_vec2d         c_pos;
+    t_color         color;
+
     j = 0;
     draw_rect_to_buffer(buffer, 
                         create_vector(pos.x - 2, pos.y - 2), 
-                        create_vector(map.size_y * (MINIMAP_CUB_SIZ + 1) + 4,
-                        map.size_x * (MINIMAP_CUB_SIZ + 1) + 4),
+                        create_vector(engine.map.size_y * (MINIMAP_CUB_SIZ + 1) + 4,
+                        engine.map.size_x * (MINIMAP_CUB_SIZ + 1) + 4),
                         create_gray(31));
-    while (j < map.size_x)
+    while (j < engine.map.size_x)
     {
         i = 0;
-        while (i < map.size_y)
+        while (i < engine.map.size_y)
         {
-            if (map.map[i][j] == CUB_AIR)
+            if (engine.map.map[i][j] == CUB_AIR)
                 color.value = 0xe3e3e8;
-            else if (map.map[i][j] == CUB_BLOCK)
+            else if (engine.map.map[i][j] == CUB_BLOCK)
                 color.value = 0x4c4c4c;
             else
                 color.value = 0x202023;
+            if (i == (__uint32_t)floor(engine.player.pos.x) && j == (__uint32_t)floor(engine.player.pos.y))
+                color = create_color(255, 10, 100);
+            
             c_pos.x = pos.x + i * (MINIMAP_CUB_SIZ + 1);
             c_pos.y = pos.y + j * (MINIMAP_CUB_SIZ + 1);
             draw_rect_to_buffer(buffer, c_pos, create_vector(MINIMAP_CUB_SIZ, MINIMAP_CUB_SIZ), color);

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 18:26:09 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 17:05:57 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include "mlx.h"
 
 # define __PROJECT_NAME "Cub3d - 1.0"
+
+# define MAX_VIEW       10000
 
 
 
@@ -43,7 +45,20 @@ typedef struct	s_image
     t_vec2d     size;
 }               t_image;
 
-# include "map_utils.h"
+typedef struct  s_player
+{
+    t_vec2d     pos;
+    t_vec2d     dir;
+    float       rot;
+    float       fov;
+}               t_player;
+
+typedef struct  s_map
+{
+    __uint8_t   **map;
+    __uint32_t  size_x;
+    __uint32_t  size_y;
+}               t_map;
 
 typedef struct  s_engine
 {
@@ -51,10 +66,17 @@ typedef struct  s_engine
     t_window    win;
     t_image     buf;
     t_map       map;
+    t_player    player;
 }               t_engine;
 
+# include "map_utils.h"
+# include "raycast.h"
 # include "graphics.h"
 # include "map_parser.h"
 
+/*
+**  MATH UTILS
+*/
+float   radians (float deg);
 
 #endif
