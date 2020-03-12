@@ -6,20 +6,26 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 12:18:21 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 11:23:36 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "graphics.h"
 
-void        draw_line_to_buffer(t_image *buff, int x, int h)
+void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color)
 {
-    (void)buff;
-    (void)x;
-    (void)h;
+    int     start;
+    
+    if (h > buff->size.y)
+        h = buff->size.y;
+    start = buff->size.y / 2 - h / 2;
+    while (h--)
+    {
+        buff->data[x + (start++ * (int)buff->size.x)] = color.value;
+    }
 }
 
-void        draw_rect_to_buffer(t_image *buff, t_vec2d pos, t_vec2d size, int color)
+void        draw_rect_to_buffer(t_image *buff, t_vec2d pos, t_vec2d size, t_color color)
 {
     int buffer_pos;
     int i;
@@ -34,7 +40,7 @@ void        draw_rect_to_buffer(t_image *buff, t_vec2d pos, t_vec2d size, int co
     {
         i = 0;
         while (i < size.x)
-           buff->data[buffer_pos + i++] = color;
+           buff->data[buffer_pos + i++] = color.value;
              
         buffer_pos += buff->size.x;
         size.y--;

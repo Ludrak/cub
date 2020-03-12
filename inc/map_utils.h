@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:32 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 18:36:36 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 11:47:10 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "engine.h"
 
-# define MINIMAP_CUB_SIZ    50
+# define MINIMAP_CUB_SIZ    10
 
 # define CUB_VOID   0
 # define CUB_AIR    1

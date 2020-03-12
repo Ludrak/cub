@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/03/11 16:24:10 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/03/12 11:30:08 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,11 +30,13 @@ TARGET			= $(TARGET_EXE)
 SRC_DIR			= srcs
 
 ##	SOURCES OF YOUR PROJECT
-SRCS			=	main.c	\
-					process.c	\
-					map_utils.c	\
-					graphics.c	\
+SRCS			=	main.c			\
+					process.c		\
+					map_utils.c		\
+					graphics.c		\
+					color_utils.c	\
 					map_parser.c
+					
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT
 BIN_DIR			= bin
@@ -133,9 +135,9 @@ $(BIN_DIR) :
 
 
 $(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADERS)
-	@echo "\r$(m_COMP) Compiling : $<"
+	@printf "$(m_COMP) Compiling : $<"
 	@$(CC) $< $(CFLAGS) $(OUT) $@ $(INCLUDES)
-	@echo "\r$(m_COMP) Compiled : $<"
+	@echo "\r$(m_COMP) Compiled : $<   "
 
 
 

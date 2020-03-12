@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:09 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 19:50:20 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 11:49:44 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void        print_map(t_map map)
     __uint32_t  i;
     __uint32_t  j;
 
+    write (1, "[MAP - CUB3D]\n", 14);
     j = 0;
     while (j < map.size_x)
     {
@@ -46,7 +47,7 @@ void        print_map(t_map map)
             if (map.map[i][j] == CUB_VOID)
                 write (1, "  ", 2);
             if (map.map[i][j] == CUB_AIR)
-                write (1, "\u253C\u253C", 6);
+                write (1, "\u254B\u254B", 6);
             if (map.map[i][j] == CUB_BLOCK)
                 write (1, "\u2588\u2588", 6);
            i++;
@@ -61,28 +62,28 @@ void        draw_minimap(t_image *buffer, t_map map, t_vec2d pos)
 {
     __uint32_t  i;
     __uint32_t  j;
-    t_vec2d c_pos;
-    int     color;
+    t_vec2d     c_pos;
+    t_color     color;
     
     j = 0;
     draw_rect_to_buffer(buffer, 
-                        pos, 
-                        create_vector(map.size_y * (MINIMAP_CUB_SIZ + 2),
-                        map.size_x * (MINIMAP_CUB_SIZ + 2)),
-                        0xFFFFFF);
+                        create_vector(pos.x - 2, pos.y - 2), 
+                        create_vector(map.size_y * (MINIMAP_CUB_SIZ + 1) + 4,
+                        map.size_x * (MINIMAP_CUB_SIZ + 1) + 4),
+                        create_gray(31));
     while (j < map.size_x)
     {
         i = 0;
         while (i < map.size_y)
         {
             if (map.map[i][j] == CUB_AIR)
-                color = 0xe3e3e8;
+                color.value = 0xe3e3e8;
             else if (map.map[i][j] == CUB_BLOCK)
-                color = 0x4c4c4c;
+                color.value = 0x4c4c4c;
             else
-                color = 0x202023;
-            c_pos.x = pos.x + i * (MINIMAP_CUB_SIZ + 2);
-            c_pos.y = pos.y + j * (MINIMAP_CUB_SIZ + 2);
+                color.value = 0x202023;
+            c_pos.x = pos.x + i * (MINIMAP_CUB_SIZ + 1);
+            c_pos.y = pos.y + j * (MINIMAP_CUB_SIZ + 1);
             draw_rect_to_buffer(buffer, c_pos, create_vector(MINIMAP_CUB_SIZ, MINIMAP_CUB_SIZ), color);
             i++;
         }

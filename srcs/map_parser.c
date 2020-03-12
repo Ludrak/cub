@@ -6,13 +6,12 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 16:23:20 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 19:34:16 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 11:41:10 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map_parser.h"
 #include <stdio.h>
-
 
 static t_map_parse_buffer  *parse_map_to_buffer(int fd)
 {
