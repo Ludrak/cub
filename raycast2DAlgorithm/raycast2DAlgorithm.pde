@@ -1,253 +1,177 @@
-
-int matrix[][] = {
-  {1, 1, 1, 1, 1}, 
-  {1, 0, 1, 0, 1}, 
-  {1, 0, 0, 0, 0}, 
-  {1, 0, 0, 1, 1},
-  {1, 0, 0, 0, 0}
+float x = radians(45);
+PVector position = new PVector(3.456478f, 4.56785768f);
+ 
+int  recursion_iterations = 0;
+ 
+int[][] map = {
+  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+  {1, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+  {1, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+  {1, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+  {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+  {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+  {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
+  {1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+  {1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-
-PVector player = new PVector(2.3, 2.3);
-
-int fov = 80;
-float r = 0;
-
-
+ 
+int scale = 50;
+ 
 void setup()
 {
-  stroke(0);
+  size(1000, 1000);
+  noFill();
   strokeWeight(3);
-  size(600, 600, P2D);
 }
-
-
-
-void keyPressed()
-{
-  
-}
-
-
+ 
 void draw()
 {
-  if(keyPressed)
+  background(255);
+ 
+  translate(250, 250);
+  stroke(22);
+  strokeWeight(3);
+  for (int i = 0; i < 10; i++)
   {
-    if(keyCode == LEFT)
-      r -= 0.1;
-    else if (keyCode == RIGHT)
-      r += 0.1;
-  }
-  translate (50, 50);
-  PVector dir = new PVector(mouseX - width / 2 - (player.x - 2) * 100 + 50, -mouseY + height / 2 + (player.y - 2) * 100 - 50);
-  PVector cast;
-  background(220);
-  for (int i = 0; i < 5; i++)
-  {
-    for (int j = 0; j < 5; j++)
+    for (int j = 0; j < 10; j++)
     {
-      if (matrix[i][j] == 1)
+      fill(255);
+      if (map[i][j] == 1)
+      {
         fill(32);
-      else fill(200);
-      stroke(20);
-      rect(i * 100, j * 100, 100, 100);
-      
-      //MOUSE
-      stroke(255, 255, 0);
-      //line(player.x * 100, player.y * 100, player.x * 100 + dir.x * 100, player.y * 100 + dir.y * -100);
+      }
+      rect(i * scale, j * scale, scale, scale);
     }
   }
-  
-  float angle = radians(fov) / 1000.0f;
-  fill(255, 0, 0, 50);
-  beginShape();
-  stroke(255, 0, 0);
-  for (float a = 0; a < radians(fov); a+=angle)
-  {
-    cast = perform_raycast(player, new PVector(sin(a + r), cos(a + r)), matrix, 5, 5);
-    //println("cast x " + cast.x + " | cast y " + cast.y + " | mouse : " + dir.normalize().x + " ; " + dir.normalize().y  + "\n");
-    //line(player.x * 100, player.y * 100, (cast.x) * 100, (cast.y) * 100);
-    vertex((cast.x) * 100, (cast.y) * 100);
-    //point((cast.x) * 100, (cast.y) * 100);
-  }
-  fill(255, 100, 0, 50);
-  stroke(255, 100, 0);
-  vertex((player.x) * 100, (player.y) * 100);
-  endShape(CLOSE);
-  strokeWeight(10);
-  point((player.x) * 100, (player.y) * 100);
-  strokeWeight(3);
-  
-  if (mousePressed)
-   {
-      player.x = (((float)mouseX + 50)/ (float)width) * 4;
-      player.y = (((float)mouseY + 50)/ (float)height) * 4;
-   }
-}
-
-
-
-
-
-
-
-
-PVector get_inter(Line one, Line two) 
-{
-  float x1 = one.get_start().x;
-  float y1 = one.get_start().y;
-  float x2 = one.get_end().x;
-  float y2 = one.get_end().y;
-
-  float x3 = two.get_start().x;
-  float y3 = two.get_start().y;
-  float x4 = two.get_end().x;
-  float y4 = two.get_end().y;
-
-  float bx = x2 - x1;
-  float by = y2 - y1;
-  float dx = x4 - x3;
-  float dy = y4 - y3;
-
-  float b_dot_d_perp = bx * dy - by * dx;
-
-  if (b_dot_d_perp == 0) return null;
-
-  float cx = x3 - x1;
-  float cy = y3 - y1;
-
-  float t = (cx * dy - cy * dx) / b_dot_d_perp;
-  if (t < 0 || t > 1) return null;
-
-  float u = (cx * by - cy * bx) / b_dot_d_perp;
-  if (u < 0 || u > 1) return null;
-
-  return new PVector(x1+t*bx, y1+t*by);
-}
-
-
-
-
-
-
-
-
-PVector  perform_raycast(PVector pos, PVector dir, int map_matrix[][], int map_sx, int map_sy)
-{
-  PVector cast = null;
-  Line    ray;
-  Line    bounds[] = new Line[4];
-  int     i;
-  int     x;
-  int     y;
-  
-  if(pos.x == floor(pos.x)) 
-    pos.x += 0.001 * dir.x;
-  if(pos.y == floor(pos.y)) 
-    pos.y += 0.001 * dir.y;
-    
-  ray = new Line(new PVector(pos.x - floor(pos.x),   pos.y - floor(pos.y)), 
-                 new PVector(dir.normalize().x * 20, dir.normalize().y * -20));
-
-/**  TO FIX CLIPPING AT ABS VALUES
-  bounds[0] = new Line(new PVector(-0.5, 0), new PVector(1.5, 0)); // bottom
-  bounds[1] = new Line(new PVector(0, -0.5), new PVector(0, 1.5)); // left
-  bounds[2] = new Line(new PVector(1.5, 1), new PVector(-0.5, 1)); // top
-  bounds[3] = new Line(new PVector(1, 1.5), new PVector(1, -0.5)); // right
-*/
-  bounds[0] = new Line(new PVector(0, 0), new PVector(1, 0)); // bottom
-  bounds[1] = new Line(new PVector(0, 0), new PVector(0, 1)); // left
-  bounds[2] = new Line(new PVector(1, 1), new PVector(0, 1)); // top
-  bounds[3] = new Line(new PVector(1, 1), new PVector(1, 0)); // right
-
  
-  x = 0;
-  y = 0;
-  if (floor(pos.x) < map_sx && floor(pos.y) < map_sy && floor(pos.x) > 0 && floor(pos.y) > 0)
+  noFill();
+  stroke(0, 255, 0);
+  ellipse(position.x * scale, position.y * scale, 12, 12);
+  recursion_iterations = 0;
+  strokeWeight(3);
+  stroke(255, 0, 0);
+  PVector cast = perform_raycast(position, new PVector(sin(x), cos(x)));
+  strokeWeight(1);
+  ellipse(cast.x * scale, cast.y * scale, 12, 12);
+ 
+  line (position.x * scale, position.y * scale, cast.x * scale, cast.y * scale);
+ 
+  text ("Intersections : " + recursion_iterations, -100, -100);
+ 
+  x+= 0.01;
+ 
+  noStroke();
+  fill(150);
+  arc (-90, -150, 20, 20, 0, x % TWO_PI, PIE);
+ 
+ 
+  fill(0);
+  text("FPS : " + floor(frameRate), -100, -120);
+  noFill();
+}
+ 
+public PVector perform_raycast(PVector pos, PVector dir)
+{
+  PVector cast = new PVector(0, 0);
+  PVector grid_pos = new PVector(floor(pos.x), floor(pos.y));
+  PVector relative_pos = new PVector(pos.x - grid_pos.x, pos.y - grid_pos.y);
+  PVector real;
+ 
+  if (relative_pos.x == 0 && dir.x < 0.0f)
   {
-    /*  TO FIX CLIPPING AT ABS VALUES
-        i = 0;
-        PVector smaller = new PVector(100, 100);
-        while (i < 4)
-        {
-          cast = get_inter(ray, bounds[i++]);
-          if (cast != null)
-            if (mag(cast.x, cast.y) < mag(smaller.x, smaller.y))
-              smaller = cast;
-        }
-        cast = smaller;
-        */
-        
-        i = 0;
-        while (cast == null && i < 4)
-        {
-          cast = get_inter(ray, bounds[i++]);
-        }
-          
-        if (i == 1)
-        {
-          x = 0;
-          y = -1;
-        }
-        if (i == 2)
-        {
-          x = -1;
-          y = 0;
-        }
-        if (i == 3)
-        {
-          x = 0;
-          y = 1;
-        }
-        if (i == 4)
-        {
-          x = 1;
-          y = 0;
-        }
-        //println("castX : " + cast.x + " : cast Y : " + cast.y);
-
-        //println(i + " face");
-        if (cast == null)
-          return (new PVector(0, 0));
-        
-        //IF BORDER OF OUT OF MAP
-        if (floor(pos.x) + x >= map_sx || floor(pos.y) + y >= map_sy || floor(pos.x) <= 0 || floor(pos.y) <= 0)
-          return (new PVector(cast.x + floor(pos.x), cast.y + floor(pos.y)));
-        if(map_matrix[floor(pos.x) + x][floor(pos.y) + y] == 1)
-          return (new PVector(cast.x + floor(pos.x), cast.y + floor(pos.y)));
-
-        return (perform_raycast(new PVector(cast.x + floor(pos.x) + (0.0001 * cast.x), cast.y + floor(pos.y) + (0.0001 * map(cast.y, 0, 1, -1, 1))), dir, map_matrix, map_sx, map_sy));
+     relative_pos.x = 1;
+     grid_pos.x -= 1.0f;
+  }
+ 
+  if (relative_pos.y == 0 && dir.y < 0.0f)
+  {
+     relative_pos.y = 1;
+     grid_pos.y -= 1.0f;
+  }
+ 
+ 
+  recursion_iterations++;
+  if (grid_pos.x >= 0 && grid_pos.x < 10 && grid_pos.y >= 0 && grid_pos.y < 10)
+  {
+    if (map[(int)grid_pos.x][(int)grid_pos.y] == 1)
+    {
+        return (pos);
+    }
+    cast = get_sqinter(relative_pos, dir);
+    real = new PVector(grid_pos.x + cast.x, grid_pos.y + cast.y);;
+ 
+    ellipse(real.x * scale, real.y * scale, 6, 6);
+ 
+    if (real.x >= 0 && real.x < 10 && real.y >= 0 && real.y < 10)
+    {
+      if (map[floor(real.x) - ((cast.x == 0) ? 1 : 0)][floor(real.y - ((cast.y == 0) ? 1 : 0))] == 1)
+      {
+        return (real);
+      }
+      if (map[floor(real.x - ((cast.x == 0) ? 1 : 0))][floor(real.y - ((cast.y == 0) ? 1 : 0))] == 0)
+      {
+        return (perform_raycast(real, dir));
+      }
+    } else
+    {
+      return (pos);
+    }
   }
   return (new PVector(0, 0));
 }
-
-
-
-
-
-
-
-
-
-
-
-class Line
+ 
+public PVector get_sqinter(PVector pos, PVector dir)
 {
-  private PVector start;
-  private PVector end;
-
-  public Line(PVector start, PVector end)
+  PVector inter = new PVector(0, 0);
+  PVector t = new PVector(0, 0);
+ 
+  if ((pos.x < 0) || (pos.x > 1) || (pos.y < 0) || (pos.y > 1))
+    return (new PVector(0, 0));
+ 
+  if (dir.x*dir.x + dir.y*dir.y == 0)
+    return (new PVector(0, 0));
+ 
+  if (dir.x > 0)
   {
-    this.start = start;
-    this.end = end;
-  }
-
-  public PVector get_start()
+    inter.x = RIGHT;
+    t.x = (1 - pos.x) / dir.x;
+  } else if (dir.x < 0)
   {
-    return (this.start);
-  }
-
-  public PVector get_end()
+    inter.x = LEFT;
+    t.x = (-pos.x) / dir.x;
+  } else
+    inter.x = -1;
+ 
+  if (dir.y > 0)
   {
-    return(this.end);
+    inter.y = TOP;
+    t.y = (1 - pos.y) / dir.y;
+  } else if (dir.y < 0)
+  {
+    inter.y = BOTTOM;
+    t.y = (-pos.y) / dir.y;
+  } else
+    inter.y = -1;
+ 
+  if (inter.x == -1 && inter.y == -1)
+    return (new PVector(0, 0));
+  else if (inter.x == -1)
+    return (new PVector(pos.x + t.y * dir.x,
+      pos.y + t.y * dir.y));
+  else if (inter.y == -1)
+    return (new PVector(pos.x + t.x * dir.x,
+      pos.y + t.y * dir.y));
+  else
+  {
+    if (t.x < t.y)
+      return (new PVector(pos.x + t.x * dir.x,
+        pos.y + t.x * dir.y));
+    else if (t.x > t.y)
+      return (new PVector(pos.x + t.y * dir.x,
+        pos.y + t.y * dir.y));
+    else
+      return (new PVector(pos.x + t.x * dir.x,
+        pos.y + t.x * dir.y));
   }
 }

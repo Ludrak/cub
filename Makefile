@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
+#    By: coralie <coralie@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/03/12 16:14:13 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/04/17 13:34:15 by coralie          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ SRCS			=	main.c			\
 					map_parser.c	\
 					raycast.c		\
 					raycast_utils.c	\
-					math_utils.c
+					math_utils.c	\
+					input.c
 					
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT
@@ -77,7 +78,7 @@ RM				= rm -rf
 CC				= gcc -c
 GCC				= gcc
 AR				= ar rcus
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
 LINKER_FLAGS	=  -framework AppKit -framework OpenGL
 OUT				= --output
 

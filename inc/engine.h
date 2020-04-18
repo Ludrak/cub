@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 17:05:57 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/18 14:10:11 by coralie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 # define __PROJECT_NAME "Cub3d - 1.0"
 
-# define MAX_VIEW       10000
-
+# define MAX_VIEW       16
+# define VIEW_HEIGHT    400
 
 
 typedef struct  s_window
@@ -51,6 +51,7 @@ typedef struct  s_player
     t_vec2d     dir;
     float       rot;
     float       fov;
+    float       speed;
 }               t_player;
 
 typedef struct  s_map
@@ -60,13 +61,28 @@ typedef struct  s_map
     __uint32_t  size_y;
 }               t_map;
 
+typedef struct	s_key
+{
+	char		value;
+	char		pressed;
+}				t_key;
+
+typedef struct	s_control_keys
+{
+	t_key		up;
+	t_key		down;
+	t_key		left;
+	t_key		right;
+}				t_control_keys;
+
 typedef struct  s_engine
 {
-    void        *ptr;
-    t_window    win;
-    t_image     buf;
-    t_map       map;
-    t_player    player;
+    void            *ptr;
+    t_window        win;
+    t_image         buf;
+    t_map           map;
+    t_player        player;
+    t_control_keys  keys;
 }               t_engine;
 
 # include "map_utils.h"
@@ -78,5 +94,13 @@ typedef struct  s_engine
 **  MATH UTILS
 */
 float   radians (float deg);
+float   max(float a, float b);
+
+/*
+**  INPUTS
+*/
+t_control_keys  set_key_values();
+int             key_released_event(int key, void *engine_ptr);
+int             key_pressed_event(int key, void *engine_ptr);
 
 #endif

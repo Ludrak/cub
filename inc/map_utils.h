@@ -15,7 +15,7 @@
 
 #include "engine.h"
 
-# define MINIMAP_CUB_SIZ    10
+# define MINIMAP_CUB_SIZ    20
 
 # define CUB_VOID   0
 # define CUB_AIR    1
@@ -27,6 +27,7 @@ void        destroy_map(t_map *map);
 //UTIL
 void        print_map(t_map map);
 void        draw_minimap(t_image *buffer, t_engine engine, t_vec2d pos);
+
 
 
 #endif

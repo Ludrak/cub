@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 19:30:52 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/18 14:31:54 by coralie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void    setup(t_engine *engine)
 		if (!check_map(engine->map))
 		{
 			printf("Error : INVALID MAP FORMAT\n");
-			p_exit(engine);
+			//p_exit(engine);
 		}
 		else
 			printf("Valid map format.\n");
@@ -51,45 +51,63 @@ void    setup(t_engine *engine)
 	}
 
 	//PLAYER SETUP
-	player.pos = create_vector(3.1, 3.1);
-	player.dir = create_vector(1.2, 0.4);
-	player.fov = 80.0f;
+	player.pos = create_vector(2.5f, 2.5f);
+	player.dir = create_vector(1.0f, 0.0f);
+	player.fov = 50.0f;
 	player.rot = 0;
+	player.speed = 4;
 	engine->player = player;
 	//t_cast cast;
+	
 	//cast = perform_raycast(engine->player, engine->player.dir, engine->map);
-	//printf ("dir : %f cast =>> x : %f, y : %f\n", engine->player.dir.y, cast.point.x, cast.point.y);
+	
+	//printf ("dir : %f %f cast =>> x : %f, y : %f\n", engine->player.dir.x, engine->player.dir.y, cast.point.x, cast.point.y);
 	//p_exit(engine);
 
 	//HOOKS
 	mlx_loop_hook(engine->ptr, runtime, engine);
-	
+	engine->keys = set_key_values();
+	mlx_hook(engine->win.ptr, 3, 0, key_pressed_event, engine);
+    mlx_hook(engine->win.ptr, 2, 0, key_released_event, engine);
+
 	mlx_loop(engine->ptr);
 }
 
 int    runtime (t_engine *engine)
-{
-	static float x, y;
-	
+{	
 	//SETUP FRAME IMAGE BUFFER
 	engine->buf.img_ptr = mlx_new_image(engine->ptr, engine->buf.size.x, engine->buf.size.y);
 	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr, &engine->buf.bpp, &engine->buf.size_l,
 		&engine->buf.endian);
 
-	engine->player.rot += 0.01;
+	if (engine->keys.left.pressed)
+        engine->player.rot += 0.06f;
+    if (engine->keys.right.pressed)
+        engine->player.rot -= 0.06f;
 
-	// engine->player.dir.x = sin(x);
-	// engine->player.dir.y = sin(y);
-	//if (engine->player.pos.y < engine->map.size_x - 2)
-	//	engine->player.pos.y += 0.1;
+	if (engine->keys.up.pressed)
+    {
+		//if (engine->map.map[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)]
+		//			[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)] != CUB_BLOCK)
+					//{
+        				engine->player.pos.x -= cos(engine->player.rot + PI / 4) * engine->player.speed / 100;
+        				engine->player.pos.y -= sin(engine->player.rot + PI / 4) * engine->player.speed / 100;
+					//}
+    }
+    if (engine->keys.down.pressed)
+    {
+		//if (engine->map.map[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)]
+					//[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)] != CUB_BLOCK)
+					//{
+						engine->player.pos.x += cos(engine->player.rot + PI / 4) * engine->player.speed / 100;
+						engine->player.pos.y += sin(engine->player.rot + PI / 4) * engine->player.speed / 100;
+					//}
+    }
+	printf ("POS : x:%f, y:%f\n", engine->player.pos.x, engine->player.pos.y);
 
-	//cast_to_frame_buffer(&engine->buf, *engine);
+	cast_to_frame_buffer(&engine->buf, *engine);
+	draw_minimap(&engine->buf, *engine, create_vector(0, 0));
 
-
-	draw_minimap(&engine->buf, *engine, create_vector(40, 40));
-	//draw_rect_to_buffer(&engine->buf, create_vector(121, 10), create_vector(200, 400), create_color(100, 20, 20));
-	x+= 0.1;
-	y+= .1;
 	mlx_put_image_to_window(engine->ptr, engine->win.ptr, engine->buf.img_ptr, 0, 0);
 	return (0);
 }

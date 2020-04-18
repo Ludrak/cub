@@ -35,7 +35,7 @@ typedef struct  s_ray
     t_vec2d end;
 }               t_ray;
 
-t_cast      perform_raycast(t_player player, t_vec2d r_dir, t_map map);
+t_cast      perform_raycast(t_vec2d pos, t_vec2d r_dir, t_map map);
 void        cast_to_frame_buffer(t_image *buffer, t_engine engine);
 
 /**

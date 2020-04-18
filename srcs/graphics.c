@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graphics.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 16:44:10 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/18 14:43:50 by coralie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color)
     if (h > buff->size.y)
         h = buff->size.y;
     start = buff->size.y / 2 - h / 2;
-    while (h--)
+    while (h-- > 0 && x + (++start * (int)buff->size.x) < buff->size.x * buff->size.y)
     {
-        buff->data[x + (start++ * (int)buff->size.x)] = color.value;
+        buff->data[x + (start * (int)buff->size.x)] = color.value;
     }
 }
 

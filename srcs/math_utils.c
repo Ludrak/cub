@@ -17,3 +17,8 @@ float   radians (float deg)
 {
     return (deg * __PI / 180);
 }
+
+float   max(float a, float b)
+{
+    return (a > b ? a : b);
+}

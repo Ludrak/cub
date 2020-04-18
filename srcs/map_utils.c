@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:09 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 19:34:59 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/18 14:08:18 by coralie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,18 @@ void        draw_minimap(t_image *buffer, t_engine engine, t_vec2d pos)
                 color.value = 0x4c4c4c;
             else
                 color.value = 0x202023;
-            if (i == (__uint32_t)floor(engine.player.pos.x) && j == (__uint32_t)floor(engine.player.pos.y))
-                color = create_color(255, 10, 100);
+            
             
             c_pos.x = pos.x + i * (MINIMAP_CUB_SIZ + 1);
             c_pos.y = pos.y + j * (MINIMAP_CUB_SIZ + 1);
             draw_rect_to_buffer(buffer, c_pos, create_vector(MINIMAP_CUB_SIZ, MINIMAP_CUB_SIZ), color);
+
+            if (i == (__uint32_t)floor(engine.player.pos.x) && j == (__uint32_t)floor(engine.player.pos.y))
+            {
+                draw_rect_to_buffer(buffer, create_vector((int)(engine.player.pos.x * (float)MINIMAP_CUB_SIZ) - 5,
+                                                        (int)(engine.player.pos.y * (float)MINIMAP_CUB_SIZ) - 5),
+                                            create_vector(10, 10), create_color(255, 0, 0));
+            }
             i++;
         }
         j++;
