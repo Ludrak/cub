@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/18 14:10:11 by coralie          ###   ########.fr       */
+/*   Updated: 2020/04/19 10:53:25 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct  s_player
     float       rot;
     float       fov;
     float       speed;
+    t_vec2d     vel;
 }               t_player;
 
 typedef struct  s_map
@@ -95,6 +96,8 @@ typedef struct  s_engine
 */
 float   radians (float deg);
 float   max(float a, float b);
+int     constrain(int value, int min, int max);
+
 
 /*
 **  INPUTS

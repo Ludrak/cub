@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 16:23:20 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 11:41:10 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/19 11:04:32 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ t_map                       *parse_map(int fd)
             else if (buffer->line[i] == '1')
                 map->map[i][j]  = CUB_BLOCK;
             else
-                //TODO CHECK
                 map->map[i][j]  = CUB_VOID;
             i++;
         }
@@ -94,6 +93,7 @@ t_map                       *parse_map(int fd)
     return (map);
 }
 
+//TODO ALGORITHM : 2D ARRAY READING USING 2 WHILE
 int                         check_map(t_map map)
 {
     __uint32_t  x;

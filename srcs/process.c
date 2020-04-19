@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/18 14:31:54 by coralie          ###   ########.fr       */
+/*   Updated: 2020/04/19 11:01:33 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,6 @@ void    setup(t_engine *engine)
 	player.rot = 0;
 	player.speed = 4;
 	engine->player = player;
-	//t_cast cast;
-	
-	//cast = perform_raycast(engine->player, engine->player.dir, engine->map);
-	
-	//printf ("dir : %f %f cast =>> x : %f, y : %f\n", engine->player.dir.x, engine->player.dir.y, cast.point.x, cast.point.y);
-	//p_exit(engine);
 
 	//HOOKS
 	mlx_loop_hook(engine->ptr, runtime, engine);
@@ -85,24 +79,22 @@ int    runtime (t_engine *engine)
     if (engine->keys.right.pressed)
         engine->player.rot -= 0.06f;
 
+	engine->player.vel = create_vector(0, 0);
 	if (engine->keys.up.pressed)
     {
-		//if (engine->map.map[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)]
-		//			[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)] != CUB_BLOCK)
-					//{
-        				engine->player.pos.x -= cos(engine->player.rot + PI / 4) * engine->player.speed / 100;
-        				engine->player.pos.y -= sin(engine->player.rot + PI / 4) * engine->player.speed / 100;
-					//}
+		engine->player.vel.x = -cos(engine->player.rot) * engine->player.speed * 0.01f;
+		engine->player.vel.y = -sin(engine->player.rot) * engine->player.speed * 0.01f;
     }
     if (engine->keys.down.pressed)
-    {
-		//if (engine->map.map[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)]
-					//[(int)floorf(engine->player.pos.x - cos(engine->player.rot + PI / 4) * engine->player.speed / 100)] != CUB_BLOCK)
-					//{
-						engine->player.pos.x += cos(engine->player.rot + PI / 4) * engine->player.speed / 100;
-						engine->player.pos.y += sin(engine->player.rot + PI / 4) * engine->player.speed / 100;
-					//}
+	{
+		engine->player.vel.x = cos(engine->player.rot) * engine->player.speed * 0.01f;;
+		engine->player.vel.y = sin(engine->player.rot) * engine->player.speed * 0.01f;
     }
+
+	if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x)][((int)floorf(engine->player.pos.y))] != CUB_BLOCK)
+		engine->player.pos.x += engine->player.vel.x;
+	if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y))] != CUB_BLOCK)
+		engine->player.pos.y += engine->player.vel.y;
 	printf ("POS : x:%f, y:%f\n", engine->player.pos.x, engine->player.pos.y);
 
 	cast_to_frame_buffer(&engine->buf, *engine);
