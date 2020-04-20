@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:32 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 16:38:26 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/20 09:58:19 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void        destroy_map(t_map *map);
 
 //UTIL
 void        print_map(t_map map);
-void        draw_minimap(t_image *buffer, t_engine engine, t_vec2d pos);
+void        draw_minimap(t_image *buffer, t_engine engine, t_vec2f pos);
 
 
 

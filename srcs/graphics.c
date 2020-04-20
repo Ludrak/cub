@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graphics.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/18 14:43:50 by coralie          ###   ########.fr       */
+/*   Updated: 2020/04/20 10:00:38 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color)
     }
 }
 
-void        draw_rect_to_buffer(t_image *buff, t_vec2d pos, t_vec2d size, t_color color)
+void        draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_color color)
 {
     int buffer_pos;
     int i;

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/19 11:01:33 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/20 19:03:08 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void    setup(t_engine *engine)
 		return ;
 
 	//SETUP FRAME IMAGE BUFFER INFO
-	engine->buf.size = create_vector(engine->win.size_x, engine->win.size_y);
+	engine->buf.size = create_vectorf(engine->win.size_x, engine->win.size_y);
 	
 	//MAP SETUP
 	if ((map_fd = open("map.cub", O_RDONLY)) > 0)
@@ -53,7 +53,7 @@ void    setup(t_engine *engine)
 	//PLAYER SETUP
 	player.pos = create_vector(2.5f, 2.5f);
 	player.dir = create_vector(1.0f, 0.0f);
-	player.fov = 50.0f;
+	player.fov = 70.0f;
 	player.rot = 0;
 	player.speed = 4;
 	engine->player = player;
@@ -79,26 +79,32 @@ int    runtime (t_engine *engine)
     if (engine->keys.right.pressed)
         engine->player.rot -= 0.06f;
 
-	engine->player.vel = create_vector(0, 0);
 	if (engine->keys.up.pressed)
     {
 		engine->player.vel.x = -cos(engine->player.rot) * engine->player.speed * 0.01f;
 		engine->player.vel.y = -sin(engine->player.rot) * engine->player.speed * 0.01f;
+
+		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))] != CUB_BLOCK)
+			engine->player.pos.x += engine->player.vel.x;
+		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))] != CUB_BLOCK)
+			engine->player.pos.y += engine->player.vel.y;
     }
     if (engine->keys.down.pressed)
 	{
 		engine->player.vel.x = cos(engine->player.rot) * engine->player.speed * 0.01f;;
 		engine->player.vel.y = sin(engine->player.rot) * engine->player.speed * 0.01f;
+		
+		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))] != CUB_BLOCK)
+			engine->player.pos.x += engine->player.vel.x;
+		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))] != CUB_BLOCK)
+			engine->player.pos.y += engine->player.vel.y;
     }
 
-	if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x)][((int)floorf(engine->player.pos.y))] != CUB_BLOCK)
-		engine->player.pos.x += engine->player.vel.x;
-	if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y))] != CUB_BLOCK)
-		engine->player.pos.y += engine->player.vel.y;
-	printf ("POS : x:%f, y:%f\n", engine->player.pos.x, engine->player.pos.y);
-
+	if (engine->keys.escape.pressed)
+		p_exit(engine);
+	
 	cast_to_frame_buffer(&engine->buf, *engine);
-	draw_minimap(&engine->buf, *engine, create_vector(0, 0));
+	draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
 
 	mlx_put_image_to_window(engine->ptr, engine->win.ptr, engine->buf.img_ptr, 0, 0);
 	return (0);

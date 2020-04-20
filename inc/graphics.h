@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:24:15 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 11:32:05 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/20 10:00:55 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,6 @@ t_color     create_gray(unsigned char luminosity);
 **  DRAW UTILS
 */
 void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color);
-void		draw_rect_to_buffer(t_image *buff, t_vec2d pos, t_vec2d size, t_color color);	
+void		draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_color color);	
 
 #endif
