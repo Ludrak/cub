@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:24:15 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/20 10:00:55 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/21 10:49:07 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,15 @@ typedef union   u_color
 {
     t_color_channel channel;
     unsigned int value : 24;
-}               t_color;
+}      
+
+         t_color;
+
+/*
+**  IMAGE UTILS
+*/
+int    loadImages(t_engine *engine);
+
 
 /*
 **  COLOR UTILS

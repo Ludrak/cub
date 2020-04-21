@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/20 19:02:43 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/21 10:32:12 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,12 @@ typedef struct  s_engine
     t_map           map;
     t_player        player;
     t_control_keys  keys;
+
+    //TEXTURES
+    t_image         cub_tex_left;
+    t_image         cub_tex_right;
+    t_image         cub_tex_top;
+    t_image         cub_tex_bottom;
 }               t_engine;
 
 # include "map_utils.h"

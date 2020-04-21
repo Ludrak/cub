@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/20 19:03:08 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/21 10:48:50 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 void    awake(t_engine *eng)
 {
 	eng->ptr = mlx_init();
+	if (!loadImages(eng))
+		p_exit(eng);
 }
 
 void    setup(t_engine *engine)
