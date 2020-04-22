@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:24:15 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/21 10:49:07 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/22 12:56:16 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,13 @@ int    loadImages(t_engine *engine);
 */
 t_color     create_color(unsigned char r, unsigned char g, unsigned char b);
 t_color     create_gray(unsigned char luminosity);
+t_color     set_color(int color_value);
 
 /*
 **  DRAW UTILS
 */
 void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color);
+void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float offset);
 void		draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_color color);	
 
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: coralie <coralie@student.42.fr>            +#+  +:+       +#+         #
+#    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/04/17 13:34:15 by coralie          ###   ########.fr        #
+#    Updated: 2020/04/22 14:11:11 by lrobino          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,9 @@ AUTHOR			= lrobino
 
 ##	VERSION
 VERSION			= 1.0
+
+##	GRAPHICS
+GRAPHICS		= #-D HIGH_GRAPHICS
 
 ##	THE DIRECTORY OF YOUR FINAL TARGET
 TARGET_DIR		= .
@@ -79,7 +82,7 @@ CC				= gcc -c
 GCC				= gcc
 AR				= ar rcus
 CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
-LINKER_FLAGS	=  -framework AppKit -framework OpenGL
+LINKER_FLAGS	=  -framework AppKit -framework OpenGL -lz
 OUT				= --output
 
 C_RESET= \033[0m
@@ -140,7 +143,7 @@ $(BIN_DIR) :
 
 $(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADERS)
 	@printf "$(m_COMP) Compiling : $<"
-	@$(CC) $< $(CFLAGS) $(OUT) $@ $(INCLUDES)
+	@$(CC) $< $(CFLAGS) $(OUT) $@ $(INCLUDES) $(GRAPHICS)
 	@echo "\r$(m_COMP) Compiled : $<   "
 
 

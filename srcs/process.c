@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/21 10:48:50 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/22 13:00:00 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void    awake(t_engine *eng)
 {
 	eng->ptr = mlx_init();
 	if (!loadImages(eng))
-		p_exit(eng);
+		p_exit(eng, "Error while loading images.");
 }
 
 void    setup(t_engine *engine)
@@ -34,31 +34,29 @@ void    setup(t_engine *engine)
 		return ;
 
 	//SETUP FRAME IMAGE BUFFER INFO
-	engine->buf.size = create_vectorf(engine->win.size_x, engine->win.size_y);
+	engine->buf.size = create_vectori(engine->win.size_x, engine->win.size_y);
+	
+	//PLAYER SETUP
+	engine->player.pos = create_vector(0, 0);
+	engine->player.fov = 60.0f;
+	engine->player.rot = 0;
+	engine->player.speed = 6;
 	
 	//MAP SETUP
-	if ((map_fd = open("map.cub", O_RDONLY)) > 0)
+	if ((map_fd = open("res/maps/map.cub", O_RDONLY)) > 0)
 	{
-		map = parse_map(map_fd);
+		map = parse_map(map_fd, engine);
 		engine->map = *map;
-		printf("Checking map bounds...\n");
-		if (!check_map(engine->map))
+		printf("[MAP] Checking map bounds...\n");
+		if (!check_map(engine->map) || (!player.pos.x && !player.pos.y))
 		{
-			printf("Error : INVALID MAP FORMAT\n");
-			//p_exit(engine);
+			printf("[MAP] Error : INVALID MAP FORMAT\n");
+			p_exit(engine, "Invalid map format.");
 		}
 		else
-			printf("Valid map format.\n");
+			printf("[MAP] Valid map format.\n");
 		close (map_fd);
 	}
-
-	//PLAYER SETUP
-	player.pos = create_vector(2.5f, 2.5f);
-	player.dir = create_vector(1.0f, 0.0f);
-	player.fov = 70.0f;
-	player.rot = 0;
-	player.speed = 4;
-	engine->player = player;
 
 	//HOOKS
 	mlx_loop_hook(engine->ptr, runtime, engine);
@@ -103,18 +101,22 @@ int    runtime (t_engine *engine)
     }
 
 	if (engine->keys.escape.pressed)
-		p_exit(engine);
+		p_exit(engine, "Escape key pressed");
 	
-	cast_to_frame_buffer(&engine->buf, *engine);
+	cast_to_frame_buffer(&engine->buf, engine);
 	draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
 
 	mlx_put_image_to_window(engine->ptr, engine->win.ptr, engine->buf.img_ptr, 0, 0);
+	mlx_destroy_image(engine->ptr, engine->buf.img_ptr);
 	return (0);
 }
 
-void    p_exit (t_engine *engine)
+void    p_exit (t_engine *engine, char *info_log)
 {
-	mlx_destroy_window(engine->ptr, engine->win.ptr);
+	printf ("[EXIT]<REQUEST> : %s\n[EXIT] Clearing data...\n", info_log);
+	if (engine)
+		mlx_destroy_window(engine->ptr, engine->win.ptr);
 	free(engine);
+	printf ("[EXIT] Done.");
 	exit(0);
 }

@@ -6,13 +6,13 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 16:06:35 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/19 13:12:42 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/21 15:51:21 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 
-float   radians (float deg)
+float   radians(float deg)
 {
     return (deg * PI / 180);
 }

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:51:19 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/11 11:32:38 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/21 11:27:56 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ void    setup(t_engine *);
 int    runtime(t_engine *);
 
 //  Executed on exit
-void    p_exit(t_engine *);
+void    p_exit(t_engine *, char *exit_log);
 
 #endif

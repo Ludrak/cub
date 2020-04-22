@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/21 10:32:12 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/21 14:23:44 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct	s_image
 	int			size_l;
 	int			bpp;
 	int			endian;
-    t_vec2f     size;
+    t_vec2i     size;
 }               t_image;
 
 typedef struct  s_player

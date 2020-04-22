@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/04/20 20:14:02 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/22 12:59:51 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ t_cast perform_raycast(t_vec2d pos, t_vec2d dir, t_map map)
 
 
 
-void        cast_to_frame_buffer(t_image *buffer, t_engine engine)
+void        cast_to_frame_buffer(t_image *buffer, t_engine *engine)
 {
     int     i;
     float   angle;
@@ -124,26 +124,27 @@ void        cast_to_frame_buffer(t_image *buffer, t_engine engine)
     t_cast  cast;
     t_vec2d r_dir;
     
-    angle = radians(engine.player.fov) / buffer->size.x;
-    a = -radians(engine.player.fov / 2);
+    angle = radians(engine->player.fov) / buffer->size.x;
+    a = -radians(engine->player.fov / 2);
     i = 0;
-    while (a < radians (engine.player.fov / 2))
+    while (a < radians (engine->player.fov / 2))
     {
-        r_dir.x = cos (a + engine.player.rot);
-        r_dir.y = sin (a + engine.player.rot);
+        r_dir.x = cos (a + engine->player.rot);
+        r_dir.y = sin (a + engine->player.rot);
 
-        cast = perform_raycast(engine.player.pos, r_dir, engine.map);
-        cast.point = vec_sub(cast.point, engine.player.pos);
-        float h = (VIEW_HEIGHT) / (cos(angle) * vec_mag(cast.point));
+        cast = perform_raycast(engine->player.pos, r_dir, engine->map);
+        cast.point = vec_sub(cast.point, engine->player.pos);
+		float h = (VIEW_HEIGHT) / (cos(angle - a) * vec_mag(cast.point));
 
         if (cast.face == TOP)
-        	draw_line_to_buffer(buffer, i, h, create_color(ft_constrain((int)ft_map(h, 0, VIEW_HEIGHT, 100, 255), 0, 255), 100, 100));
+        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_top, cast.face_pos);
 		else if (cast.face == LEFT)
-        	draw_line_to_buffer(buffer, i, h, create_color(100, ft_constrain((int)ft_map(h, 0, VIEW_HEIGHT, 100, 255), 0, 255), 100));
+        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_left, cast.face_pos);
 		else if (cast.face == RIGHT)
-        	draw_line_to_buffer(buffer, i, h, create_color(100, 100, ft_constrain((int)ft_map(h, 0, VIEW_HEIGHT, 100, 255), 0, 255)));
-		else if (cast.face == BOTTOM)
-			draw_line_to_buffer(buffer, i, h, create_gray(ft_constrain((int)ft_map(h, 0, VIEW_HEIGHT, 100, 255), 100, 255)));
+        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_right, cast.face_pos);
+	    else if (cast.face == BOTTOM)
+			draw_ray_to_buffer(engine, i, h, engine->cub_tex_bottom, cast.face_pos);
+
         i++;
         a += angle;
     }

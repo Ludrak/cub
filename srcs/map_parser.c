@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 16:23:20 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/19 11:04:32 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/21 18:06:33 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void                 free_map_buffer(t_map_parse_buffer *buffer)
     }
 }
 
-t_map                       *parse_map(int fd)
+t_map                       *parse_map(int fd, t_engine *engine)
 {
     t_map               *map;
     t_map_parse_buffer  *buffer;
@@ -81,6 +81,30 @@ t_map                       *parse_map(int fd)
                 map->map[i][j]  = CUB_AIR;
             else if (buffer->line[i] == '1')
                 map->map[i][j]  = CUB_BLOCK;
+            else if (buffer->line[i] == 'N')
+            {
+                map->map[i][j] = CUB_AIR;
+                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                engine->player.rot = -PI / 2;
+            }
+            else if (buffer->line[i] == 'S')
+            {
+                map->map[i][j] = CUB_AIR;
+                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                engine->player.rot = PI / 2;
+            }
+            else if (buffer->line[i] == 'E')
+            {
+                map->map[i][j] = CUB_AIR;
+                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                engine->player.rot = 0;
+            }
+            else if (buffer->line[i] == 'W')
+            {
+                map->map[i][j] = CUB_AIR;
+                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                engine->player.rot = PI;
+            }
             else
                 map->map[i][j]  = CUB_VOID;
             i++;

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 15:14:41 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/20 19:36:37 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/22 13:00:37 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct  s_ray
 }               t_ray;
 
 t_cast      perform_raycast(t_vec2d pos, t_vec2d r_dir, t_map map);
-void        cast_to_frame_buffer(t_image *buffer, t_engine engine);
+void        cast_to_frame_buffer(t_image *buffer, t_engine *engine);
 
 /**
  *      UTILS 

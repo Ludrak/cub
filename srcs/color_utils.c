@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 11:22:35 by lrobino           #+#    #+#             */
-/*   Updated: 2020/03/12 11:28:00 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/04/21 14:42:13 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ t_color    create_color(unsigned char r, unsigned char g, unsigned char b)
     col.channel.r = r;
     col.channel.g = g;
     col.channel.b = b;
+    return (col);
+}
+
+t_color    set_color(int color_value)
+{
+    t_color col;
+    col.value = color_value;
     return (col);
 }
 
