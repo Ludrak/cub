@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/04/22 12:59:51 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/23 11:21:53 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void        cast_to_frame_buffer(t_image *buffer, t_engine *engine)
     float   a;
     t_cast  cast;
     t_vec2d r_dir;
-    
+
     angle = radians(engine->player.fov) / buffer->size.x;
     a = -radians(engine->player.fov / 2);
     i = 0;
@@ -137,13 +137,13 @@ void        cast_to_frame_buffer(t_image *buffer, t_engine *engine)
 		float h = (VIEW_HEIGHT) / (cos(angle - a) * vec_mag(cast.point));
 
         if (cast.face == TOP)
-        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_top, cast.face_pos);
+        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_top, cast.face_pos, r_dir, cos(angle - a) );
 		else if (cast.face == LEFT)
-        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_left, cast.face_pos);
+        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_left, cast.face_pos, r_dir, cos(angle - a) );
 		else if (cast.face == RIGHT)
-        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_right, cast.face_pos);
+        	draw_ray_to_buffer(engine, i, h, engine->cub_tex_right, cast.face_pos, r_dir, cos(angle - a) );
 	    else if (cast.face == BOTTOM)
-			draw_ray_to_buffer(engine, i, h, engine->cub_tex_bottom, cast.face_pos);
+			draw_ray_to_buffer(engine, i, h, engine->cub_tex_bottom, cast.face_pos, r_dir, cos(angle - a) );
 
         i++;
         a += angle;

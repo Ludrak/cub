@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/22 14:11:52 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/23 19:52:21 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color)
     }
 }
 
-void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float offset)
+void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float offset, t_vec2d p_dir, float scale_f)
 {
-    int     start;
+    int     y;
     int     start_h;
     int     h_offset;
     int     i;
@@ -46,11 +46,11 @@ void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float o
     dist = ft_map(h, 0, eng->buf.size.y, 20, 0);
 
 
-    start = eng->buf.size.y / 2 + 50 - h / 2;
-    while (h-- > 0 && x + (++start * (int)eng->buf.size.x) < eng->buf.size.x * eng->buf.size.y)
+    y = eng->buf.size.y / 2 - h / 2;
+    while (h-- > 0 && x + (++y * (int)eng->buf.size.x) < eng->buf.size.x * eng->buf.size.y)
     {
         pos = (int)ft_map(offset, 0, 1, 0, tex.size.x) + (int)ft_map(i, -h_offset, start_h + h_offset, 0, tex.size.y) * tex.size.x;
-#ifdef  HIGH_GRAPHICS
+#ifdef  HIGH_GRAPHICSF
         t_color col;
         col = set_color(tex.data[pos]);
         col.channel.r = ft_constrain(col.channel.r - dist, 0, 255);
@@ -63,31 +63,37 @@ void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float o
 #else
         if (pos < eng->buf.size.x * eng->buf.size.y)
         { 
-            eng->buf.data[x + (start * (int)eng->buf.size.x)] = tex.data[pos];
+            eng->buf.data[x + (y * (int)eng->buf.size.x)] = tex.data[pos];
         }
 #endif
         i++;
     }
-    while (start < eng->buf.size.y - 1)
+    (void)p_dir;
+
+    //FLOOR CASTING
+    t_vec2d dir;
+    t_vec2d cast;
+    t_vec2d r_pos;
+    t_vec2i t;
+    float dirZ;
+    float posZ = 0.5f;
+    dir.y = sin(eng->player.rot + PI + (ft_map(x, 0, eng->buf.size.x, -radians(eng->player.fov) / 2, radians(eng->player.fov) / 2)));
+    dir.x = cos(eng->player.rot + PI + (ft_map(x, 0, eng->buf.size.x, -radians(eng->player.fov) / 2, radians(eng->player.fov) / 2)));
+    r_pos = eng->player.pos;
+
+    while (y < eng->buf.size.y - 1)
     {
-#ifdef  HIGH_GRAPHICS
-        float floorX;
-        float floorY;
-        floorX = eng->player.pos.x + ((0.5f * eng->buf.size.y) / (eng->player.pos.y - eng->buf.size.y / 2)) * (sin(eng->player.rot) - (-cos(eng->player.rot)));
-        floorY = eng->player.pos.y + ((0.5f * eng->buf.size.y) / (eng->player.pos.y - eng->buf.size.y / 2)) * (cos(eng->player.rot) - (sin(eng->player.rot)));
-        
-        floorX += ((0.5f * eng->buf.size.y) / (eng->player.pos.y - eng->buf.size.y / 2)) * ((sin(eng->player.rot) + (-cos(eng->player.rot))) - ((sin(eng->player.rot) - (-cos(eng->player.rot)) / eng->buf.size.x))) * x;
-        floorY += ((0.5f * eng->buf.size.y) / (eng->player.pos.y - eng->buf.size.y / 2)) * ((cos(eng->player.rot) + (sin(eng->player.rot))) - ((cos(eng->player.rot) - (sin(eng->player.rot)) / eng->buf.size.y))) * start;
-        
-        float tx;
-        float ty;
-        tx = (int)(tex.size.x * (floorX - (int)floorX)) & (tex.size.x - 1);
-        ty = (int)(tex.size.y * (floorY - (int)floorY)) & (tex.size.y - 1);
-        eng->buf.data[x + (start++ * (int)eng->buf.size.x)] = tex.data[(int)(tex.size.x * ty + tx)];
-#endif
-        start++;
+        //(void)scale_f;
+        //dirZ = sin(PI + ft_map(y, 0, eng->buf.size.y, -radians(eng->player.fov / 2), radians(eng->player.fov) / 2)) * scale_f;
+        dirZ = sin(PI + ft_map(y, 0, eng->buf.size.y, -0.5f, 0.5f)) * scale_f;
+        cast = create_vector(dir.x * ((1.0F - posZ) / dirZ) + r_pos.x, dir.y * ((1.0F - posZ) / dirZ) + r_pos.y);
+        t.x = (int)((cast.x - floor(cast.x)) * (tex.size.x));
+        t.y = (int)((cast.y - floor(cast.y)) * (tex.size.y));
+
+        //FIX OUT OF BOUNDS
+        eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->cub_tex_floor.data[(int)(tex.size.x * t.x + t.y)];
+        eng->buf.data[x + ((eng->buf.size.y - y++) * (int)eng->buf.size.x)] = eng->cub_tex_ceil.data[(int)(tex.size.x * t.x + t.y)];
     }
-    
 }
 
 void        draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_color color)
@@ -126,13 +132,17 @@ static int load_from_png(char *png, t_image *img, t_engine engine)
 
 int    loadImages(t_engine *engine)
 {
-    if (!load_from_png("res/textures/wall_texture.png", &engine->cub_tex_left, *engine))
+    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_left, *engine))
         return (0);
-    if (!load_from_png("res/textures/wall_texture.png", &engine->cub_tex_right, *engine))
+    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_right, *engine))
         return (0);
-    if (!load_from_png("res/textures/wall_texture.png", &engine->cub_tex_top, *engine))
+    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_top, *engine))
         return (0);
-    if (!load_from_png("res/textures/wall_texture.png", &engine->cub_tex_bottom, *engine))
+    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_bottom, *engine))
+        return (0);
+    if (!load_from_png("res/textures/temple_texture_ceil.png", &engine->cub_tex_floor, *engine))
+        return (0);
+    if (!load_from_png("res/textures/temple_texture_top.png", &engine->cub_tex_ceil, *engine))
         return (0);
     return (1);
 }

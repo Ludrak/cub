@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/21 14:23:44 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/23 19:22:45 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 # define __PROJECT_NAME "Cub3d - 1.0"
 
 # define MAX_VIEW       24
-# define VIEW_HEIGHT    1000
+# define VIEW_HEIGHT    720
+# define VIEW_WIDTH     720
 
 
 typedef struct  s_window
@@ -50,7 +51,9 @@ typedef struct  s_player
     t_vec2d     pos;
     t_vec2d     dir;
     float       rot;
+    float       rotZ;
     float       fov;
+    float       v_fov;
     float       speed;
     t_vec2f     vel;
 }               t_player;
@@ -91,6 +94,8 @@ typedef struct  s_engine
     t_image         cub_tex_right;
     t_image         cub_tex_top;
     t_image         cub_tex_bottom;
+    t_image         cub_tex_floor;
+    t_image         cub_tex_ceil;
 }               t_engine;
 
 # include "map_utils.h"

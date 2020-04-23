@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/22 13:00:00 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/23 15:01:51 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void    awake(t_engine *eng)
 {
 	eng->ptr = mlx_init();
 	if (!loadImages(eng))
-		p_exit(eng, "Error while loading images.");
+		p_exit(eng, "Error while loading images.", STATUS_IMG_FAILED);
 }
 
 void    setup(t_engine *engine)
@@ -39,7 +39,9 @@ void    setup(t_engine *engine)
 	//PLAYER SETUP
 	engine->player.pos = create_vector(0, 0);
 	engine->player.fov = 60.0f;
+	engine->player.v_fov = 36.0f;
 	engine->player.rot = 0;
+	engine->player.rotZ = 0;
 	engine->player.speed = 6;
 	
 	//MAP SETUP
@@ -51,7 +53,7 @@ void    setup(t_engine *engine)
 		if (!check_map(engine->map) || (!player.pos.x && !player.pos.y))
 		{
 			printf("[MAP] Error : INVALID MAP FORMAT\n");
-			p_exit(engine, "Invalid map format.");
+			p_exit(engine, "Invalid map format.", STATUS_MAP_FAILED);
 		}
 		else
 			printf("[MAP] Valid map format.\n");
@@ -88,6 +90,8 @@ int    runtime (t_engine *engine)
 			engine->player.pos.x += engine->player.vel.x;
 		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))] != CUB_BLOCK)
 			engine->player.pos.y += engine->player.vel.y;
+
+		engine->player.rotZ+=0.1f;
     }
     if (engine->keys.down.pressed)
 	{
@@ -98,10 +102,11 @@ int    runtime (t_engine *engine)
 			engine->player.pos.x += engine->player.vel.x;
 		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))] != CUB_BLOCK)
 			engine->player.pos.y += engine->player.vel.y;
+		engine->player.rotZ -= 0.1f;
     }
 
 	if (engine->keys.escape.pressed)
-		p_exit(engine, "Escape key pressed");
+		p_exit(engine, "Escape key pressed", STATUS_SUCCESS);
 	
 	cast_to_frame_buffer(&engine->buf, engine);
 	draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
@@ -111,10 +116,10 @@ int    runtime (t_engine *engine)
 	return (0);
 }
 
-void    p_exit (t_engine *engine, char *info_log)
+void    p_exit (t_engine *engine, char *info_log, int status)
 {
 	printf ("[EXIT]<REQUEST> : %s\n[EXIT] Clearing data...\n", info_log);
-	if (engine)
+	if (status != STATUS_IMG_FAILED)
 		mlx_destroy_window(engine->ptr, engine->win.ptr);
 	free(engine);
 	printf ("[EXIT] Done.");

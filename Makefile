@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/04/22 14:11:11 by lrobino          ###   ########.fr        #
+#    Updated: 2020/04/22 14:29:48 by lrobino          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ AUTHOR			= lrobino
 VERSION			= 1.0
 
 ##	GRAPHICS
-GRAPHICS		= #-D HIGH_GRAPHICS
+GRAPHICS		= -D HIGH_GRAPHICS
 
 ##	THE DIRECTORY OF YOUR FINAL TARGET
 TARGET_DIR		= .
