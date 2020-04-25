@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/23 19:52:21 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 13:50:41 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,25 +43,25 @@ void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float o
         h = eng->buf.size.y;
     }
     start_h = h;
-    dist = ft_map(h, 0, eng->buf.size.y, 20, 0);
+    dist = ft_map(h, 0, eng->buf.size.y, 0, 200);
 
 
     y = eng->buf.size.y / 2 - h / 2;
     while (h-- > 0 && x + (++y * (int)eng->buf.size.x) < eng->buf.size.x * eng->buf.size.y)
     {
         pos = (int)ft_map(offset, 0, 1, 0, tex.size.x) + (int)ft_map(i, -h_offset, start_h + h_offset, 0, tex.size.y) * tex.size.x;
-#ifdef  HIGH_GRAPHICSF
+#ifdef  HIGH_GRAPHICS
         t_color col;
         col = set_color(tex.data[pos]);
-        col.channel.r = ft_constrain(col.channel.r - dist, 0, 255);
-        col.channel.g = ft_constrain(col.channel.g - dist, 0, 255);
-        col.channel.b = ft_constrain(col.channel.b - dist, 0, 255);
+        col.channel.r = ft_constrain(ft_map(dist, 0, 50, 0, col.channel.r), 0, col.channel.r);
+        col.channel.g = ft_constrain(ft_map(dist, 0, 50, 0, col.channel.g), 0, col.channel.g);
+        col.channel.b = ft_constrain(ft_map(dist, 0, 50, 0, col.channel.b), 0, col.channel.b);
         if (pos < eng->buf.size.x * eng->buf.size.y)
         { 
-            eng->buf.data[x + (start * (int)eng->buf.size.x)] = col.value;
+            eng->buf.data[x + (y * (int)eng->buf.size.x)] = col.value;
         }
 #else
-        if (pos < eng->buf.size.x * eng->buf.size.y)
+        if (pos < tex.size.x * tex.size.y)
         { 
             eng->buf.data[x + (y * (int)eng->buf.size.x)] = tex.data[pos];
         }
@@ -91,8 +91,29 @@ void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float o
         t.y = (int)((cast.y - floor(cast.y)) * (tex.size.y));
 
         //FIX OUT OF BOUNDS
+#ifndef HIGH_GRAPHICS
         eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->cub_tex_floor.data[(int)(tex.size.x * t.x + t.y)];
         eng->buf.data[x + ((eng->buf.size.y - y++) * (int)eng->buf.size.x)] = eng->cub_tex_ceil.data[(int)(tex.size.x * t.x + t.y)];
+#else
+        dist = (scale_f * vec_mag(cast));//sin(PI + ft_map(y, 0, eng->buf.size.y, -0.5f, 0.5f)) * scale_f;
+        t_color col;
+        col = set_color(eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->cub_tex_floor.data[(int)(tex.size.x * t.x + t.y)]);
+        col.channel.r = ft_constrain(ft_map(dist, MAX_VIEW, 0, 0, col.channel.r), 0, col.channel.r);
+        col.channel.g = ft_constrain(ft_map(dist, MAX_VIEW, 0, 0, col.channel.g), 0, col.channel.g);
+        col.channel.b = ft_constrain(ft_map(dist, MAX_VIEW, 0, 0, col.channel.b), 0, col.channel.b);
+        if (pos < eng->buf.size.x * eng->buf.size.y)
+        { 
+            eng->buf.data[x + (y * (int)eng->buf.size.x)] = col.value;
+        }
+        col = set_color(eng->buf.data[x + ((eng->buf.size.y - y++) * (int)eng->buf.size.x)] = eng->cub_tex_ceil.data[(int)(tex.size.x * t.x + t.y)]);
+        col.channel.r = ft_constrain(ft_map(dist, MAX_VIEW, 0, 0, col.channel.r), 0, col.channel.r);
+        col.channel.g = ft_constrain(ft_map(dist, MAX_VIEW, 0, 0, col.channel.g), 0, col.channel.g);
+        col.channel.b = ft_constrain(ft_map(dist, MAX_VIEW, 0, 0, col.channel.b), 0, col.channel.b);
+        if (pos < eng->buf.size.x * eng->buf.size.y)
+        { 
+            eng->buf.data[x + (y * (int)eng->buf.size.x)] = col.value;
+        }
+#endif
     }
 }
 
@@ -118,7 +139,7 @@ void        draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_colo
     }
 }
 
-static int load_from_png(char *png, t_image *img, t_engine engine)
+int load_from_png(char *png, t_image *img, t_engine engine)
 {
     if (!png || !img)   
         return (0);
@@ -132,17 +153,9 @@ static int load_from_png(char *png, t_image *img, t_engine engine)
 
 int    loadImages(t_engine *engine)
 {
-    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_left, *engine))
+    if (!load_from_png("res/textures/dungeon_floor.png", &engine->cub_tex_floor, *engine))
         return (0);
-    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_right, *engine))
-        return (0);
-    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_top, *engine))
-        return (0);
-    if (!load_from_png("res/textures/temple_texture_wall.png", &engine->cub_tex_bottom, *engine))
-        return (0);
-    if (!load_from_png("res/textures/temple_texture_ceil.png", &engine->cub_tex_floor, *engine))
-        return (0);
-    if (!load_from_png("res/textures/temple_texture_top.png", &engine->cub_tex_ceil, *engine))
+    if (!load_from_png("res/textures/dungeon_ceil.png", &engine->cub_tex_ceil, *engine))
         return (0);
     return (1);
 }

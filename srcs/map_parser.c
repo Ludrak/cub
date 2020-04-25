@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 16:23:20 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/21 18:06:33 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 13:53:26 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,38 +75,46 @@ t_map                       *parse_map(int fd, t_engine *engine)
         i = 0;
         while (buffer->line[i])
         {
-            if (buffer->line[i] == ' ')
-                map->map[i][j]  = CUB_VOID;
-            else if (buffer->line[i] == '0')
-                map->map[i][j]  = CUB_AIR;
-            else if (buffer->line[i] == '1')
-                map->map[i][j]  = CUB_BLOCK;
-            else if (buffer->line[i] == 'N')
+            if(ft_isdigit(buffer->line[i]))
             {
-                map->map[i][j] = CUB_AIR;
-                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
-                engine->player.rot = -PI / 2;
-            }
-            else if (buffer->line[i] == 'S')
-            {
-                map->map[i][j] = CUB_AIR;
-                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
-                engine->player.rot = PI / 2;
-            }
-            else if (buffer->line[i] == 'E')
-            {
-                map->map[i][j] = CUB_AIR;
-                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
-                engine->player.rot = 0;
-            }
-            else if (buffer->line[i] == 'W')
-            {
-                map->map[i][j] = CUB_AIR;
-                engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
-                engine->player.rot = PI;
+                /*else if (buffer->line[i] == '0')
+                    map->map[i][j]  = get_cube_by_id(engine, CUB_AIR);
+                else if (buffer->line[i] == '1')
+                    map->map[i][j]  = get_cube_by_id(engine, CUB_BLOCK);*/
+                map->map[i][j] = get_cube_by_id(engine, buffer->line[i]- 48);
+                
             }
             else
-                map->map[i][j]  = CUB_VOID;
+            {
+                if (buffer->line[i] == ' ')
+                    map->map[i][j]  = get_cube_by_id(engine, CUB_VOID);
+                else if (buffer->line[i] == 'N')
+                {
+                    map->map[i][j] = get_cube_by_id(engine, CUB_AIR);//CUB_AIR;
+                    engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                    engine->player.rot = -PI / 2;
+                }
+                else if (buffer->line[i] == 'S')
+                {
+                    map->map[i][j] = get_cube_by_id(engine, CUB_AIR);//CUB_AIR;
+                    engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                    engine->player.rot = PI / 2;
+                }
+                else if (buffer->line[i] == 'E')
+                {
+                    map->map[i][j] = get_cube_by_id(engine, CUB_AIR);//CUB_AIR;
+                    engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                    engine->player.rot = 0;
+                }
+                else if (buffer->line[i] == 'W')
+                {
+                    map->map[i][j] = get_cube_by_id(engine, CUB_AIR);//CUB_AIR;
+                    engine->player.pos = create_vector(i + 0.5f, j + 0.5f);
+                    engine->player.rot = PI;
+                }
+                else
+                    map->map[i][j]  = get_cube_by_id(engine, CUB_VOID);//CUB_VOID;
+            }
             i++;
         }
         buffer = buffer->next;
@@ -134,8 +142,8 @@ int                         check_map(t_map map)
         while (y < map.size_y)
         {
             current = last;
-            last = map.map[y][x];
-            if (current + last == 1)
+            last = map.map[y][x]->id;
+            if (current + last == CUB_VOID)
                 return (0);
             y++;
         }
@@ -149,8 +157,8 @@ int                         check_map(t_map map)
         while (x < map.size_x)
         {
             current = last;
-            last = map.map[y][x];
-            if (current + last == 1)
+            last = map.map[y][x]->id;
+            if (current + last == CUB_VOID)
                 return (0);
             x++;
         }

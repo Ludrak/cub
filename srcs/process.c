@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/23 15:01:51 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 14:02:41 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,14 @@ void    awake(t_engine *eng)
 	eng->ptr = mlx_init();
 	if (!loadImages(eng))
 		p_exit(eng, "Error while loading images.", STATUS_IMG_FAILED);
+	eng->cubes = NULL;
+
+	
+	register_cube(eng, NULL, CUB_VOID);	//VOID
+	register_cube(eng, NULL, CUB_AIR);	//AIR
+	register_cube(eng, "res/textures/dungeon_wall.png", CUB_BLOCK);
+	register_cube(eng, "res/textures/dungeon_wall_torch.png", CUB_BLOCK_TORCH);
+	register_cube(eng, "res/textures/dungeon_wall_cracked.png", CUB_BLOCK_CRACKED);
 }
 
 void    setup(t_engine *engine)
@@ -38,8 +46,7 @@ void    setup(t_engine *engine)
 	
 	//PLAYER SETUP
 	engine->player.pos = create_vector(0, 0);
-	engine->player.fov = 60.0f;
-	engine->player.v_fov = 36.0f;
+	engine->player.fov = 90.0f;
 	engine->player.rot = 0;
 	engine->player.rotZ = 0;
 	engine->player.speed = 6;
@@ -86,23 +93,23 @@ int    runtime (t_engine *engine)
 		engine->player.vel.x = -cos(engine->player.rot) * engine->player.speed * 0.01f;
 		engine->player.vel.y = -sin(engine->player.rot) * engine->player.speed * 0.01f;
 
-		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))] != CUB_BLOCK)
+		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)//CUB_BLOCK)
 			engine->player.pos.x += engine->player.vel.x;
-		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))] != CUB_BLOCK)
+		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)//CUB_BLOCK)
 			engine->player.pos.y += engine->player.vel.y;
 
-		engine->player.rotZ+=0.1f;
+		//engine->player.rotZ+=0.1f;
     }
     if (engine->keys.down.pressed)
 	{
 		engine->player.vel.x = cos(engine->player.rot) * engine->player.speed * 0.01f;;
 		engine->player.vel.y = sin(engine->player.rot) * engine->player.speed * 0.01f;
 		
-		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))] != CUB_BLOCK)
+		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)//CUB_BLOCK)
 			engine->player.pos.x += engine->player.vel.x;
-		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))] != CUB_BLOCK)
+		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)//CUB_BLOCK)
 			engine->player.pos.y += engine->player.vel.y;
-		engine->player.rotZ -= 0.1f;
+		//engine->player.rotZ -= 0.1f;
     }
 
 	if (engine->keys.escape.pressed)

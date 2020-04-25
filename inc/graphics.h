@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:24:15 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/23 10:16:06 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/24 22:11:58 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int    loadImages(t_engine *engine);
 t_color     create_color(unsigned char r, unsigned char g, unsigned char b);
 t_color     create_gray(unsigned char luminosity);
 t_color     set_color(int color_value);
+
+int load_from_png(char *png, t_image *img, t_engine engine);
 
 /*
 **  DRAW UTILS

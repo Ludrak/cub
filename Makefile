@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/04/22 14:29:48 by lrobino          ###   ########.fr        #
+#    Updated: 2020/04/25 13:10:50 by lrobino          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,10 @@
 AUTHOR			= lrobino
 
 ##	VERSION
-VERSION			= 1.0
+VERSION			= 1.1
 
 ##	GRAPHICS
-GRAPHICS		= -D HIGH_GRAPHICS
+GRAPHICS		= #-D HIGH_GRAPHICS
 
 ##	THE DIRECTORY OF YOUR FINAL TARGET
 TARGET_DIR		= .
@@ -42,7 +42,8 @@ SRCS			=	main.c			\
 					raycast.c		\
 					raycast_utils.c	\
 					math_utils.c	\
-					input.c
+					input.c			\
+					cube.c
 					
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT

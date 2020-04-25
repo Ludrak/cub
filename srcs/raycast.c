@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/04/23 11:21:53 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 12:44:17 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_vec2d get_sqinter(t_vec2d pos, t_vec2d dir)
 
 
 
-t_cast perform_raycast(t_vec2d pos, t_vec2d dir, t_map map)
+t_cast perform_raycast(t_engine *eng, t_vec2d pos, t_vec2d dir, t_map map)
 {
   t_vec2d cast = create_vector(0, 0);
   t_vec2d grid_pos = create_vector((int)(pos.x), (int)(pos.y));
@@ -91,27 +91,27 @@ t_cast perform_raycast(t_vec2d pos, t_vec2d dir, t_map map)
  
   if (grid_pos.x >= 0.0f && grid_pos.x <= map.size_x && grid_pos.y >= 0.0f && grid_pos.y <= map.size_y)
   {
-    if (map.map[(int)grid_pos.x][(int)grid_pos.y] == CUB_BLOCK || map.map[(int)grid_pos.x][(int)grid_pos.y] == CUB_VOID)
+    if (map.map[(int)grid_pos.x][(int)grid_pos.y]->id != CUB_AIR)//== CUB_BLOCK || map.map[(int)grid_pos.x][(int)grid_pos.y]->id == CUB_VOID)
     {
-        return (create_cast_info(pos, create_vector(pos.x - (int)pos.x, pos.y - (int)pos.y), dir));
+        return (create_cast_info(map.map[(int)grid_pos.x][(int)grid_pos.y], pos, create_vector(pos.x - (int)pos.x, pos.y - (int)pos.y), dir));
     }
     cast = get_sqinter(relative_pos, dir);
     real = create_vector(grid_pos.x + cast.x, grid_pos.y + cast.y);;
   
     if (real.x >= 0.0f && real.x <= map.size_x + 1 && real.y >= 0.0f && real.y <= map.size_y + 1)
     {
-      if (map.map[(int)(real.x) - ((cast.x == 0) ? 1 : 0)][(int)(real.y - ((cast.y == 0) ? 1 : 0))] == CUB_BLOCK || map.map[(int)(real.x) - ((cast.x == 0) ? 1 : 0)][(int)(real.y - ((cast.y == 0) ? 1 : 0))] == CUB_VOID)
+      if (map.map[(int)(real.x) - ((cast.x == 0) ? 1 : 0)][(int)(real.y - ((cast.y == 0) ? 1 : 0))]->id != CUB_AIR)//== CUB_BLOCK || map.map[(int)(real.x) - ((cast.x == 0) ? 1 : 0)][(int)(real.y - ((cast.y == 0) ? 1 : 0))]->id == CUB_VOID)//CUB_BLOCK CUB_VOID
       {
-        return (create_cast_info(real, cast, dir));
+        return (create_cast_info(map.map[(int)(real.x) - ((cast.x == 0) ? 1 : 0)][(int)(real.y - ((cast.y == 0) ? 1 : 0))], real, cast, dir));
       }
-      if (map.map[(int)(real.x - ((cast.x == 0) ? 1 : 0))][(int)(real.y - ((cast.y == 0) ? 1 : 0))] == CUB_AIR)
+      else//if (map.map[(int)(real.x - ((cast.x == 0) ? 1 : 0))][(int)(real.y - ((cast.y == 0) ? 1 : 0))]->id == CUB_AIR) //CUB_AIR
       {
-        return (perform_raycast(real, dir, map));
+        return (perform_raycast(eng, real, dir, map));
       }
     } else
-      return (create_cast_info(pos, cast, dir));
+      return (create_cast_info(NULL, pos, cast, dir));
   }
-  return (create_cast_info(create_vector(0, 0), create_vector(0, 0), dir));
+  return (create_cast_info(NULL, create_vector(0, 0), create_vector(0, 0), dir));
 }
 
 
@@ -132,18 +132,19 @@ void        cast_to_frame_buffer(t_image *buffer, t_engine *engine)
         r_dir.x = cos (a + engine->player.rot);
         r_dir.y = sin (a + engine->player.rot);
 
-        cast = perform_raycast(engine->player.pos, r_dir, engine->map);
+        cast = perform_raycast(engine, engine->player.pos, r_dir, engine->map);
         cast.point = vec_sub(cast.point, engine->player.pos);
 		float h = (VIEW_HEIGHT) / (cos(angle - a) * vec_mag(cast.point));
 
-        if (cast.face == TOP)
+     /*   if (cast.face == TOP)
         	draw_ray_to_buffer(engine, i, h, engine->cub_tex_top, cast.face_pos, r_dir, cos(angle - a) );
 		else if (cast.face == LEFT)
         	draw_ray_to_buffer(engine, i, h, engine->cub_tex_left, cast.face_pos, r_dir, cos(angle - a) );
 		else if (cast.face == RIGHT)
         	draw_ray_to_buffer(engine, i, h, engine->cub_tex_right, cast.face_pos, r_dir, cos(angle - a) );
 	    else if (cast.face == BOTTOM)
-			draw_ray_to_buffer(engine, i, h, engine->cub_tex_bottom, cast.face_pos, r_dir, cos(angle - a) );
+			draw_ray_to_buffer(engine, i, h, engine->cub_tex_bottom, cast.face_pos, r_dir, cos(angle - a) );*/
+        draw_ray_to_buffer(engine, i, h, cast.cube->tex, cast.face_pos, r_dir, cos(angle-a));
 
         i++;
         a += angle;

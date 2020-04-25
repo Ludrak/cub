@@ -6,12 +6,11 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:09 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/20 10:01:22 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 14:03:18 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
-
 
 t_map       *create_map(unsigned int size_x, unsigned int size_y)
 {
@@ -22,11 +21,11 @@ t_map       *create_map(unsigned int size_x, unsigned int size_y)
         return (NULL);
     map->size_x = size_x;
     map->size_y = size_y;
-    if (!(map->map = ft_calloc(size_y + 1, sizeof(__uint8_t *))))
+    if (!(map->map = ft_calloc(size_y + 1, sizeof(t_cube **)))) // __uint_8t*
         return (NULL);
     i = 0;
     while (i < size_y)
-        if (!(map->map[i++] = ft_calloc(size_x + 1, sizeof(__uint8_t))))
+        if (!(map->map[i++] = ft_calloc(size_x + 1, sizeof(t_cube *)))) // __uint8_t
             return (NULL);
     return (map);
 }
@@ -44,11 +43,14 @@ void        print_map(t_map map)
         i = 0;
         while (i < map.size_y)
         {
-            if (map.map[i][j] == CUB_VOID)
+            // TODO
+            // FIX OLD CUBE STRUCT
+            
+            if (map.map[i][j]->id == CUB_VOID)
                 write (1, "  ", 2);
-            if (map.map[i][j] == CUB_AIR)
+            if (map.map[i][j]->id == CUB_AIR)
                 write (1, "\u254B\u254B", 6);
-            if (map.map[i][j] == CUB_BLOCK)
+            else
                 write (1, "\u2588\u2588", 6);
            i++;
         }
@@ -76,9 +78,9 @@ void        draw_minimap(t_image *buffer, t_engine engine, t_vec2f pos)
         i = 0;
         while (i < engine.map.size_y)
         {
-            if (engine.map.map[i][j] == CUB_AIR)
+            if (engine.map.map[i][j]->id == CUB_AIR)
                 color.value = 0xe3e3e8;
-            else if (engine.map.map[i][j] == CUB_BLOCK)
+            else if (engine.map.map[i][j]->id != CUB_VOID)
                 color.value = 0x4c4c4c;
             else
                 color.value = 0x202023;

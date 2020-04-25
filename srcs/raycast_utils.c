@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 15:38:11 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/20 19:57:42 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 12:41:56 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ t_ray       create_ray (t_vec2d start, t_vec2d end)
     return (ray);
 }
 
-t_cast      create_cast_info(t_vec2d point, t_vec2d cast_block, t_vec2d dir)
+t_cast      create_cast_info(t_cube *cube, t_vec2d point, t_vec2d cast_block, t_vec2d dir)
 {
     t_cast			cast;
 	t_face			face;
 	(void)dir;
 	face = -1;
 	cast.point = point;
-
+	cast.cube = cube;//eng->map.map[(int)floor(point.x)][(int)floor(point.y)];
+	//printf ("%p\n", &engine->map.map[(int)floor(point.x)][(int)floor(point.y)]->tex);
 	if (fabs(cast_block.x - 0.5f) > fabs(cast_block.y - 0.5f))
 	{
 		if (cast_block.x <= 0.0001)

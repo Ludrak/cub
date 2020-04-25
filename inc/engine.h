@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/23 19:22:45 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/04/25 13:19:55 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 # include "vectors.h"
 # include "mlx.h"
 
-# define __PROJECT_NAME "Cub3d - 1.0"
+# define __PROJECT_NAME "Cub3d - 1.1.0"
 
-# define MAX_VIEW       24
+# define MAX_VIEW       10
 # define VIEW_HEIGHT    720
 # define VIEW_WIDTH     720
 
@@ -53,14 +53,21 @@ typedef struct  s_player
     float       rot;
     float       rotZ;
     float       fov;
-    float       v_fov;
     float       speed;
     t_vec2f     vel;
 }               t_player;
 
+typedef struct  s_cube
+{
+    t_image     tex;
+    short       id;
+}               t_cube;
+
+
 typedef struct  s_map
 {
-    __uint8_t   **map;
+    //__uint8_t   **map;
+    t_cube      ***map;
     __uint32_t  size_x;
     __uint32_t  size_y;
 }               t_map;
@@ -89,6 +96,8 @@ typedef struct  s_engine
     t_player        player;
     t_control_keys  keys;
 
+    t_list          *cubes;
+
     //TEXTURES
     t_image         cub_tex_left;
     t_image         cub_tex_right;
@@ -101,7 +110,14 @@ typedef struct  s_engine
 # include "map_utils.h"
 # include "raycast.h"
 # include "graphics.h"
+# include "process.h"
 # include "map_parser.h"
+
+/*
+**  CUBE UTILS
+*/
+int         register_cube(t_engine *eng, char *tex_file, short id);
+t_cube      *get_cube_by_id(t_engine *eng, short id);
 
 /*
 **  MATH UTILS
