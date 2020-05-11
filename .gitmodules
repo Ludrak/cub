@@ -7,3 +7,6 @@
 [submodule "lib/libgnl"]
 	path = lib/libgnl
 	url = https://github.com/Ludrak/get_next_line
+[submodule "lib/libmlx-linux"]
+	path = lib/libmlx-linux
+	url = https://github.com/42Paris/minilibx-linux
