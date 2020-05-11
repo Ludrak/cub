@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/05/11 18:50:46 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/05/11 19:06:16 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,6 @@ SRCS			=	main.c			\
 					math_utils.c	\
 					input.c			\
 					cube.c
-					
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT
 BIN_DIR			= bin
@@ -75,14 +74,14 @@ OBJS			= $(addprefix $(BIN_DIR)/,$(SRCS:.c=.o))
 INCLUDES		= $(addprefix -I,$(HEADERS_DIR))
 
 ifneq	($(LIB_DIR), -)
-LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libgnl/libgnl.a#$(addprefix $(LIB_DIR)/,$(addsuffix .a,$(addprefix $(LIBS)/,$(LIBS))))
+LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libgnl/libgnl.a
 endif
 
 ifeq	($(OS), Darwin)
 LIBFILES		+= lib/libmlx/libmlx.a
 endif
 ifeq	($(OS), Linux)
-LIBFILES		+= lib/libmlx-linux/libmlx_Linux.a
+LIBFILES		+= lib/libmlx-linux/libmlx.a
 endif
 ##
 
@@ -92,7 +91,7 @@ GCC				= gcc
 AR				= ar rcus
 CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
 ifeq ($(OS), Linux)
-	LINKER_FLAGS	= $(INCLUDES) -lm -lXext -lX11 -Llib/libmlx-linux -lmlx 
+LINKER_FLAGS	= $(INCLUDES) -lm -lXext -lX11 -Llib/libmlx-linux -lmlx 
 endif
 ifeq ($(OS), Darwin)
 LINKER_FLAGS	= -framework AppKit -framework OpenGL -lz
@@ -183,7 +182,7 @@ $(LIB_DIR)/libmlx/libmlx.a : $(LIB_DIR)/libmlx
 	@$(MAKE) -C $<
 
 
-$(LIB_DIR)/libmlx-linux/libmlx_Linux.a : $(LIB_DIR)/libmlx-linux
+$(LIB_DIR)/libmlx-linux/libmlx.a : $(LIB_DIR)/libmlx-linux
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
 
