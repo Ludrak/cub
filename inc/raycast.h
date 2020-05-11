@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 15:14:41 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/25 12:42:08 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/11 10:11:30 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define TOP 2
 # define BOTTOM 3
 
-typedef uint8_t t_face;
+typedef __uint8_t t_face;
 
 typedef struct  s_cast
 {

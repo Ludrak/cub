@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/25 13:50:41 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/11 10:41:28 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float o
             eng->buf.data[x + (y * (int)eng->buf.size.x)] = col.value;
         }
 #else
+        (void)dist;
         if (pos < tex.size.x * tex.size.y)
         { 
             eng->buf.data[x + (y * (int)eng->buf.size.x)] = tex.data[pos];
@@ -138,7 +139,7 @@ void        draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_colo
         size.y--;
     }
 }
-
+/*
 int load_from_png(char *png, t_image *img, t_engine engine)
 {
     if (!png || !img)   
@@ -149,13 +150,28 @@ int load_from_png(char *png, t_image *img, t_engine engine)
     if (!(img->data = (int *)mlx_get_data_addr(img->img_ptr, &img->bpp, &img->size_l, &img->endian)))
         return (0);
     return (1);
+}*/
+
+int load_from_xpm(char *png, t_image *img, t_engine engine)
+{
+    if (!png || !img)   
+        return (0);
+    (void)engine;//TODO
+    if (!(img->img_ptr = mlx_xpm_file_to_image(engine.ptr, png, &img->size.x, &img->size.y)))
+        return (0);
+    if (!(img->data = (int *)mlx_get_data_addr(img->img_ptr, &img->bpp, &img->size_l, &img->endian)))
+        return (0);
+    return (1);
 }
 
+/*
+**  USED TO BE PNG (no mlx_png_file_to_image() in libmlx_Linux)
+*/
 int    loadImages(t_engine *engine)
 {
-    if (!load_from_png("res/textures/dungeon_floor.png", &engine->cub_tex_floor, *engine))
+    if (!load_from_xpm("res/textures/dungeon_floor.png", &engine->cub_tex_floor, *engine))
         return (0);
-    if (!load_from_png("res/textures/dungeon_ceil.png", &engine->cub_tex_ceil, *engine))
+    if (!load_from_xpm("res/textures/dungeon_ceil.png", &engine->cub_tex_ceil, *engine))
         return (0);
     return (1);
 }

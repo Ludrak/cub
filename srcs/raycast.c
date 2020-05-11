@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/04/25 12:44:17 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/11 10:25:32 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,7 @@ t_cast perform_raycast(t_engine *eng, t_vec2d pos, t_vec2d dir, t_map map)
      relative_pos.y = 1.0f;
      grid_pos.y -= 1.0f;
   }
- 
- 
+
   if (grid_pos.x >= 0.0f && grid_pos.x <= map.size_x && grid_pos.y >= 0.0f && grid_pos.y <= map.size_y)
   {
     if (map.map[(int)grid_pos.x][(int)grid_pos.y]->id != CUB_AIR)//== CUB_BLOCK || map.map[(int)grid_pos.x][(int)grid_pos.y]->id == CUB_VOID)

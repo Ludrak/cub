@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/25 14:02:41 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/11 10:19:05 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void    awake(t_engine *eng)
 void    setup(t_engine *engine)
 {
 	t_map		*map;
-	t_player	player;
+	//t_player	player;
 	int			map_fd;
 
 	//WINDOW SETUP
@@ -57,7 +57,7 @@ void    setup(t_engine *engine)
 		map = parse_map(map_fd, engine);
 		engine->map = *map;
 		printf("[MAP] Checking map bounds...\n");
-		if (!check_map(engine->map) || (!player.pos.x && !player.pos.y))
+		if (!check_map(engine->map) || (!engine->player.pos.x && !engine->player.pos.y))
 		{
 			printf("[MAP] Error : INVALID MAP FORMAT\n");
 			p_exit(engine, "Invalid map format.", STATUS_MAP_FAILED);
@@ -84,9 +84,10 @@ int    runtime (t_engine *engine)
 		&engine->buf.endian);
 
 	if (engine->keys.left.pressed)
-        engine->player.rot += 0.06f;
+		engine->player.rot += 0.06f;
+	
     if (engine->keys.right.pressed)
-        engine->player.rot -= 0.06f;
+		engine->player.rot -= 0.06f;
 
 	if (engine->keys.up.pressed)
     {

@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/04/25 13:10:50 by lrobino          ###   ########.fr        #
+#    Updated: 2020/05/11 18:50:46 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ BIN_DIR			= bin
 
 
 ##	PUT THE DIRECTORIES OF YOUR HEADER FILES HERE
-HEADERS_DIR		= inc lib/libft lib/libvector lib/libmlx lib/libgnl
+HEADERS_DIR		= inc lib/libft lib/libvector lib/libmlx lib/libmlx-linux lib/libgnl /usr/include
 
 ##	HEADERS OF YOUR PROJET /!\ USE FULL PATH FROM CURRENT FOLDER /!\ 
 HEADERS			= inc/engine.h inc/process.h inc/map_utils.h inc/map_parser.h inc/graphics.h
@@ -68,14 +68,22 @@ LIBS			= libft lib2
 
 ##
 
+OS				= $(shell uname)
+
 OBJS			= $(addprefix $(BIN_DIR)/,$(SRCS:.c=.o))
 
 INCLUDES		= $(addprefix -I,$(HEADERS_DIR))
 
 ifneq	($(LIB_DIR), -)
-LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libmlx/libmlx.a lib/libgnl/libgnl.a#$(addprefix $(LIB_DIR)/,$(addsuffix .a,$(addprefix $(LIBS)/,$(LIBS))))
+LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libgnl/libgnl.a#$(addprefix $(LIB_DIR)/,$(addsuffix .a,$(addprefix $(LIBS)/,$(LIBS))))
 endif
 
+ifeq	($(OS), Darwin)
+LIBFILES		+= lib/libmlx/libmlx.a
+endif
+ifeq	($(OS), Linux)
+LIBFILES		+= lib/libmlx-linux/libmlx_Linux.a
+endif
 ##
 
 RM				= rm -rf
@@ -83,7 +91,12 @@ CC				= gcc -c
 GCC				= gcc
 AR				= ar rcus
 CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
-LINKER_FLAGS	=  -framework AppKit -framework OpenGL -lz
+ifeq ($(OS), Linux)
+	LINKER_FLAGS	= $(INCLUDES) -lm -lXext -lX11 -Llib/libmlx-linux -lmlx 
+endif
+ifeq ($(OS), Darwin)
+LINKER_FLAGS	= -framework AppKit -framework OpenGL -lz
+endif
 OUT				= --output
 
 C_RESET= \033[0m
@@ -111,7 +124,6 @@ m_ERR		= $(C_RESET)[$(BRED) $(TARGET) $(C_RESET)] [$(BRED)ERROR$(C_RESET)] :$(BY
 
 
 all : version $(TARGET)
-	
 	@echo "$(C_RESET) Done."
 
 ##
@@ -130,7 +142,7 @@ $(TARGET_LIB) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
 exe : $(TARGET_EXE)
 $(TARGET_EXE) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
 	@echo "$(m_LINK) Making target $(TARGET_EXE)"
-	@$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(OBJS) $(LINKER_FLAGS) $(LIBFILES)
+	$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(OBJS) $(LINKER_FLAGS) $(LIBFILES) 
 	@echo "$(m_LINK) Link success !"
 
 ##
@@ -166,9 +178,15 @@ $(LIB_DIR)/%/libvector.a : $(LIB_DIR)/%
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
 
-$(LIB_DIR)/%/libmlx.a : $(LIB_DIR)/%
+$(LIB_DIR)/libmlx/libmlx.a : $(LIB_DIR)/libmlx
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
+
+
+$(LIB_DIR)/libmlx-linux/libmlx_Linux.a : $(LIB_DIR)/libmlx-linux
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
 
 $(LIB_DIR)/%/libgnl.a : $(LIB_DIR)/%
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
@@ -185,7 +203,12 @@ clean :
 	@$(MAKE) -C lib/libft clean
 	@$(MAKE) -C lib/libvector clean
 	@$(MAKE) -C lib/libgnl clean
+ifeq ($(OS), Darwin)
 	@$(MAKE) -C lib/libmlx clean
+endif
+ifeq ($(OS), Linux)
+	@$(MAKE) -C lib/libmlx-linux clean
+endif
 	@$(RM) $(BIN_DIR)
 	@echo "$(m_REMV) Removed .o files."
 
@@ -198,7 +221,6 @@ fclean : clean
 	@$(MAKE) -C lib/libft fclean
 	@$(MAKE) -C lib/libvector fclean
 	@$(MAKE) -C lib/libgnl fclean
-	@$(MAKE) -C lib/libmlx clean
 	@echo "$(m_REMV) Removed target : '$(TARGET)'"
 
 
