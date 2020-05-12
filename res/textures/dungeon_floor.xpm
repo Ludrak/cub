@@ -1,0 +1,27 @@
+/* XPM */
+static char *dungeon_floor[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 5 1 ",
+"  c #433428",
+". c #4E3C2E",
+"X c #513C2B",
+"o c #624936",
+"O c #6A503B",
+/* pixels */
+"OoooXOOooOOOXooO",
+"oOOoXooOOOooXooo",
+"ooooXOoOooooXOOo",
+"..X...  ..X...  ",
+"XoooooooXooooooO",
+"XoooOOooXoOooOoo",
+"XOOOOoOOXOOOOooo",
+".   ..    ..X.. ",
+"oooXOoOOooooXooo",
+"OooXoOOoOOOoXoOO",
+"OOoXooooooooXooo",
+".....X..    ..X.",
+"OOOOoooXoOOooooX",
+"OoOOOOOXoOoOOOOX",
+"ooOooooXooOOoooX",
+"...X.. ...X..   "
+};

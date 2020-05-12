@@ -1,0 +1,30 @@
+/* XPM */
+static char *dungeon_ceil[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 8 1 ",
+"  c #050608",
+". c #070B0D",
+"X c #070E12",
+"o c #0E1317",
+"O c #0A1920",
+"+ c #152A36",
+"@ c #4E3C2E",
+"# c #624936",
+/* pixels */
+"OOOOOO.@#.OOOOOO",
+"OOOOX+.##.+OXOOO",
+"XO+OOO.@# +OOXX+",
+"OOOXOO.@#.OOXOOO",
+"+OXOOX.@#.OO+OOO",
+"+OXXO+.@#.OOX+OX",
+".......@#o .....",
+"@@@@##@@########",
+"#########@@@@#@@",
+".......#@.. ....",
+"++XOOO.#@.XOOXOO",
+"OOOOX+.#@.++XOO+",
+"OXXOOO.#@.O+OOOO",
+"OO+OOX.##.OXOOOO",
+"O+OO+O.#@ OO+XXO",
+"OOOXOO.#@.OOOOOO"
+};
