@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/05/11 19:06:16 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/05/12 15:45:06 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,7 +76,6 @@ INCLUDES		= $(addprefix -I,$(HEADERS_DIR))
 ifneq	($(LIB_DIR), -)
 LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libgnl/libgnl.a
 endif
-
 ifeq	($(OS), Darwin)
 LIBFILES		+= lib/libmlx/libmlx.a
 endif
@@ -90,36 +89,14 @@ CC				= gcc -c
 GCC				= gcc
 AR				= ar rcus
 CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
+OUT				= --output
+
 ifeq ($(OS), Linux)
-LINKER_FLAGS	= $(INCLUDES) -lm -lXext -lX11 -Llib/libmlx-linux -lmlx 
+LINKER_FLAGS	= $(INCLUDES) -Llib/libmlx-linux -lmlx_Linux -lmlx -lX11 -lXext -lm
 endif
 ifeq ($(OS), Darwin)
 LINKER_FLAGS	= -framework AppKit -framework OpenGL -lz
 endif
-OUT				= --output
-
-C_RESET= \033[0m
-
-BGREEN = \033[1;32m
-GREEN = \033[0;32m
-YELLOW	= \033[0;33m
-BYELLOW = \033[1;33m
-PURPLE = \033[0;35m
-BPURPLE = \033[1;35m
-BRED	= \033[1;31m
-RED		= \033[0;31m
-BLUE	= \033[0;34m
-BBLUE	= \033[1;34m
-
-m_MAKE		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)MAKE$(C_RESET)] :
-m_INFO		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)INFO$(C_RESET)] :
-m_LINK		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)LINK$(C_RESET)] :
-m_COMP		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)COMP$(C_RESET)] :
-
-m_WARN		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BYELLOW)WARN$(C_RESET)] :$(YELLOW)
-m_REMV		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BRED)CLEAN$(C_RESET)] :$(BYELLOW)
-m_ERR		= $(C_RESET)[$(BRED) $(TARGET) $(C_RESET)] [$(BRED)ERROR$(C_RESET)] :$(BYELLOW)
-
 
 
 all : version $(TARGET)
@@ -168,12 +145,15 @@ ifneq	($(LIB_DIR), -)
 	@echo "$(m_ERR) Could not find $(LIB_DIR)/ directory !"
 endif
 
-
 $(LIB_DIR)/%/libft.a : $(LIB_DIR)/%
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
 
 $(LIB_DIR)/%/libvector.a : $(LIB_DIR)/%
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+$(LIB_DIR)/%/libgnl.a : $(LIB_DIR)/%
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
 
@@ -183,11 +163,6 @@ $(LIB_DIR)/libmlx/libmlx.a : $(LIB_DIR)/libmlx
 
 
 $(LIB_DIR)/libmlx-linux/libmlx.a : $(LIB_DIR)/libmlx-linux
-	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
-	@$(MAKE) -C $<
-
-
-$(LIB_DIR)/%/libgnl.a : $(LIB_DIR)/%
 	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
 	@$(MAKE) -C $<
 
@@ -250,6 +225,33 @@ version :
 	@printf "#$(C_RESET)   Project : %-20.20s                                              $(BBLUE)#\n" $(TARGET)
 	@printf "#$(C_RESET)   Version : %-15.15s                       Author : %-10.10s         $(BBLUE)#\n" $(VERSION) $(AUTHOR)
 	@echo "#################################################################################$(C_RESET)\n\n"
+
+
+##
+##	COLORS
+##
+
+C_RESET= \033[0m
+BGREEN = \033[1;32m
+GREEN = \033[0;32m
+YELLOW	= \033[0;33m
+BYELLOW = \033[1;33m
+PURPLE = \033[0;35m
+BPURPLE = \033[1;35m
+BRED	= \033[1;31m
+RED		= \033[0;31m
+BLUE	= \033[0;34m
+BBLUE	= \033[1;34m
+
+m_MAKE		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)MAKE$(C_RESET)] :
+m_INFO		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)INFO$(C_RESET)] :
+m_LINK		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)LINK$(C_RESET)] :
+m_COMP		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)COMP$(C_RESET)] :
+
+m_WARN		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BYELLOW)WARN$(C_RESET)] :$(YELLOW)
+m_REMV		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BRED)CLEAN$(C_RESET)] :$(BYELLOW)
+m_ERR		= $(C_RESET)[$(BRED) $(TARGET) $(C_RESET)] [$(BRED)ERROR$(C_RESET)] :$(BYELLOW)
+
 
 ##
 ##	SHORTCUTS
