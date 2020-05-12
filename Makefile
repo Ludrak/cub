@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/05/12 15:45:06 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/05/12 15:51:08 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,7 +92,7 @@ CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
 OUT				= --output
 
 ifeq ($(OS), Linux)
-LINKER_FLAGS	= $(INCLUDES) -Llib/libmlx-linux -lmlx_Linux -lmlx -lX11 -lXext -lm
+LINKER_FLAGS	= $(INCLUDES) -Llib/libmlx-linux -lmlx -lX11 -lXext -lm
 endif
 ifeq ($(OS), Darwin)
 LINKER_FLAGS	= -framework AppKit -framework OpenGL -lz
