@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/11 10:19:05 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/05/12 11:00:12 by coralie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void    awake(t_engine *eng)
 	
 	register_cube(eng, NULL, CUB_VOID);	//VOID
 	register_cube(eng, NULL, CUB_AIR);	//AIR
-	register_cube(eng, "res/textures/dungeon_wall.png", CUB_BLOCK);
-	register_cube(eng, "res/textures/dungeon_wall_torch.png", CUB_BLOCK_TORCH);
-	register_cube(eng, "res/textures/dungeon_wall_cracked.png", CUB_BLOCK_CRACKED);
+	register_cube(eng, "res/textures/dungeon_wall.xpm", CUB_BLOCK);
+	register_cube(eng, "res/textures/dungeon_wall_torch.xpm", CUB_BLOCK_TORCH);
+	register_cube(eng, "res/textures/dungeon_wall_cracked.xpm", CUB_BLOCK_CRACKED);
 }
 
 void    setup(t_engine *engine)

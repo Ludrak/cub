@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graphics.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/11 10:41:28 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/05/12 10:59:47 by coralie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,9 +169,9 @@ int load_from_xpm(char *png, t_image *img, t_engine engine)
 */
 int    loadImages(t_engine *engine)
 {
-    if (!load_from_xpm("res/textures/dungeon_floor.png", &engine->cub_tex_floor, *engine))
+    if (!load_from_xpm("res/textures/dungeon_floor.xpm", &engine->cub_tex_floor, *engine))
         return (0);
-    if (!load_from_xpm("res/textures/dungeon_ceil.png", &engine->cub_tex_ceil, *engine))
+    if (!load_from_xpm("res/textures/dungeon_ceil.xpm", &engine->cub_tex_ceil, *engine))
         return (0);
     return (1);
 }
