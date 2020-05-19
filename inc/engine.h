@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/25 13:19:55 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/19 22:13:51 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <sys/types.h>
 # include <math.h>
+# include <X11/X.h>
 # include "libft.h"
 # include "vectors.h"
 # include "mlx.h"
@@ -34,6 +35,14 @@ typedef struct  s_window
     int         size_x;
     int         size_y;
 }               t_window;
+
+typedef struct  s_camera
+{
+    int         fov;
+    float       l_angle;
+    float       r_angle;
+    float       *z_buffer;
+}               t_camera;
 
 typedef struct	s_image
 {
@@ -55,6 +64,7 @@ typedef struct  s_player
     float       fov;
     float       speed;
     t_vec2f     vel;
+    t_vec2d     plane;
 }               t_player;
 
 typedef struct  s_cube
@@ -66,7 +76,6 @@ typedef struct  s_cube
 
 typedef struct  s_map
 {
-    //__uint8_t   **map;
     t_cube      ***map;
     __uint32_t  size_x;
     __uint32_t  size_y;
@@ -74,7 +83,7 @@ typedef struct  s_map
 
 typedef struct	s_key
 {
-	char		value;
+	int 		value;
 	char		pressed;
 }				t_key;
 
@@ -89,20 +98,21 @@ typedef struct	s_control_keys
 
 typedef struct  s_engine
 {
+    //MLX
     void            *ptr;
     t_window        win;
     t_image         buf;
-    t_map           map;
+    t_camera        camera;
+    
     t_player        player;
+    
+    //INPUT
     t_control_keys  keys;
-
+    
+    //MAP
+    t_map           map;
     t_list          *cubes;
 
-    //TEXTURES
-    t_image         cub_tex_left;
-    t_image         cub_tex_right;
-    t_image         cub_tex_top;
-    t_image         cub_tex_bottom;
     t_image         cub_tex_floor;
     t_image         cub_tex_ceil;
 }               t_engine;
@@ -111,7 +121,14 @@ typedef struct  s_engine
 # include "raycast.h"
 # include "graphics.h"
 # include "process.h"
+# include "sprite.h"
 # include "map_parser.h"
+
+/*
+**  CAMERA UTILS
+*/
+void    init_camera(t_window win, t_camera *cam, int fov);
+
 
 /*
 **  CUBE UTILS

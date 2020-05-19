@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:09 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/25 14:03:18 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/18 15:41:11 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void        draw_minimap(t_image *buffer, t_engine engine, t_vec2f pos)
                 color.value = 0x4c4c4c;
             else
                 color.value = 0x202023;
-            
             
             c_pos.x = pos.x + i * (MINIMAP_CUB_SIZ + 1);
             c_pos.y = pos.y + j * (MINIMAP_CUB_SIZ + 1);

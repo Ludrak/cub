@@ -6,7 +6,7 @@
 #    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/05/12 15:51:08 by lrobino          ###   ########lyon.fr    #
+#    Updated: 2020/05/19 22:11:25 by lrobino          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,9 @@ SRCS			=	main.c			\
 					raycast_utils.c	\
 					math_utils.c	\
 					input.c			\
-					cube.c
+					cube.c			\
+					sprite.c		\
+					camera.c
 
 ##	BINARIES DIRECTORY OF YOUR PROJECT
 BIN_DIR			= bin
@@ -118,7 +120,7 @@ $(TARGET_LIB) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
 exe : $(TARGET_EXE)
 $(TARGET_EXE) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
 	@echo "$(m_LINK) Making target $(TARGET_EXE)"
-	$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(OBJS) $(LINKER_FLAGS) $(LIBFILES) 
+	@$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(OBJS) $(LINKER_FLAGS) $(LIBFILES) 
 	@echo "$(m_LINK) Link success !"
 
 ##

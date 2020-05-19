@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: coralie <coralie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/12 11:00:12 by coralie          ###   ########.fr       */
+/*   Updated: 2020/05/18 16:43:58 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void    awake(t_engine *eng)
 		p_exit(eng, "Error while loading images.", STATUS_IMG_FAILED);
 	eng->cubes = NULL;
 
-	
 	register_cube(eng, NULL, CUB_VOID);	//VOID
 	register_cube(eng, NULL, CUB_AIR);	//AIR
 	register_cube(eng, "res/textures/dungeon_wall.xpm", CUB_BLOCK);
@@ -32,7 +31,6 @@ void    awake(t_engine *eng)
 void    setup(t_engine *engine)
 {
 	t_map		*map;
-	//t_player	player;
 	int			map_fd;
 
 	//WINDOW SETUP
@@ -46,7 +44,8 @@ void    setup(t_engine *engine)
 	
 	//PLAYER SETUP
 	engine->player.pos = create_vector(0, 0);
-	engine->player.fov = 90.0f;
+	engine->player.plane = create_vector(0, 0);
+	engine->player.fov = 90.0F;
 	engine->player.rot = 0;
 	engine->player.rotZ = 0;
 	engine->player.speed = 6;
@@ -70,14 +69,15 @@ void    setup(t_engine *engine)
 	//HOOKS
 	mlx_loop_hook(engine->ptr, runtime, engine);
 	engine->keys = set_key_values();
-	mlx_hook(engine->win.ptr, 3, 0, key_pressed_event, engine);
-    mlx_hook(engine->win.ptr, 2, 0, key_released_event, engine);
+
+	mlx_hook(engine->win.ptr, KeyPress, KeyPressMask, key_pressed_event, engine);
+    mlx_hook(engine->win.ptr, KeyRelease, KeyReleaseMask, key_released_event, engine);
 
 	mlx_loop(engine->ptr);
 }
 
 int    runtime (t_engine *engine)
-{	
+{
 	//SETUP FRAME IMAGE BUFFER
 	engine->buf.img_ptr = mlx_new_image(engine->ptr, engine->buf.size.x, engine->buf.size.y);
 	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr, &engine->buf.bpp, &engine->buf.size_l,
@@ -89,35 +89,39 @@ int    runtime (t_engine *engine)
     if (engine->keys.right.pressed)
 		engine->player.rot -= 0.06f;
 
+	// Since modulo doesnt work for float we need to bound this into [0;TWO_PI] 
+	if (engine->player.rot > TWO_PI)
+		engine->player.rot = 0;
+	else if (engine->player.rot < 0)
+		engine->player.rot = TWO_PI;
+
 	if (engine->keys.up.pressed)
     {
 		engine->player.vel.x = -cos(engine->player.rot) * engine->player.speed * 0.01f;
 		engine->player.vel.y = -sin(engine->player.rot) * engine->player.speed * 0.01f;
 
-		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)//CUB_BLOCK)
+		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)
 			engine->player.pos.x += engine->player.vel.x;
-		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)//CUB_BLOCK)
+		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)
 			engine->player.pos.y += engine->player.vel.y;
-
-		//engine->player.rotZ+=0.1f;
     }
     if (engine->keys.down.pressed)
 	{
-		engine->player.vel.x = cos(engine->player.rot) * engine->player.speed * 0.01f;;
+		engine->player.vel.x = cos(engine->player.rot) * engine->player.speed * 0.01f;
 		engine->player.vel.y = sin(engine->player.rot) * engine->player.speed * 0.01f;
-		
-		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)//CUB_BLOCK)
-			engine->player.pos.x += engine->player.vel.x;
-		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)//CUB_BLOCK)
-			engine->player.pos.y += engine->player.vel.y;
-		//engine->player.rotZ -= 0.1f;
-    }
 
+		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)
+			engine->player.pos.x += engine->player.vel.x;
+		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)
+			engine->player.pos.y += engine->player.vel.y;
+    }
 	if (engine->keys.escape.pressed)
 		p_exit(engine, "Escape key pressed", STATUS_SUCCESS);
-	
+
 	cast_to_frame_buffer(&engine->buf, engine);
+	render_sprite(*engine, &engine->buf);
 	draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
+
 
 	mlx_put_image_to_window(engine->ptr, engine->win.ptr, engine->buf.img_ptr, 0, 0);
 	mlx_destroy_image(engine->ptr, engine->buf.img_ptr);
