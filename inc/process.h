@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:51:19 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/22 14:27:01 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/06/29 13:03:51 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 #include "engine.h"
 
 //EXIT STATUS
-# define STATUS_IMG_FAILED  -2
-# define STATUS_MAP_FAILED  -1
-# define STATUS_SUCCESS     0
+# define STATUS_WIN_FAILED      -3
+# define STATUS_IMG_FAILED      -2
+# define STATUS_MAP_FAILED      -1
+# define STATUS_SUCCESS         0
+# define STATUS_WINDOW_CLOSED   1
 
 //  First execution
 void    awake(t_engine *);

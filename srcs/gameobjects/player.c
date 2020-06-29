@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   math_utils.c                                       :+:      :+:    :+:   */
+/*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/12 16:06:35 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/21 15:51:21 by lrobino          ###   ########.fr       */
+/*   Created: 2020/06/29 14:25:57 by lrobino           #+#    #+#             */
+/*   Updated: 2020/06/29 14:27:36 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 
-float   radians(float deg)
+t_player	create_player(t_vec2d pos, float rot, float speed)
 {
-    return (deg * PI / 180);
-}
+	t_player	player;
 
-float   max(float a, float b)
-{
-    return (a > b ? a : b);
+	player.pos = pos;
+	player.plane = create_vector(0, 0);
+	player.rot = rot;
+	player.rotZ = 0;
+	player.speed = speed;
+	return (player);
 }

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/18 16:43:58 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/06/29 16:10:57 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,126 +14,82 @@
 #include "process.h"
 #include <stdio.h>
 
-void    awake(t_engine *eng)
+void	awake(t_engine *eng)
 {
 	eng->ptr = mlx_init();
 	if (!loadImages(eng))
 		p_exit(eng, "Error while loading images.", STATUS_IMG_FAILED);
-	eng->cubes = NULL;
-
-	register_cube(eng, NULL, CUB_VOID);	//VOID
-	register_cube(eng, NULL, CUB_AIR);	//AIR
-	register_cube(eng, "res/textures/dungeon_wall.xpm", CUB_BLOCK);
-	register_cube(eng, "res/textures/dungeon_wall_torch.xpm", CUB_BLOCK_TORCH);
-	register_cube(eng, "res/textures/dungeon_wall_cracked.xpm", CUB_BLOCK_CRACKED);
+	register_cubes(eng);
+	register_sprites(eng);
+	/// !!!! PARSE MAP
+	add_sprite(eng, 0, create_vector(2.5F, 2.5F), 0.5F);
+	add_sprite(eng, 0, create_vector(2.5F, 3.5F), 0.5F);
 }
 
-void    setup(t_engine *engine)
+void	setup(t_engine *engine)
 {
 	t_map		*map;
 	int			map_fd;
 
-	//WINDOW SETUP
-	engine->win.size_x	= 1280;	//TODO PARSE
-	engine->win.size_y	= 720;	//TODO PARSE
-	if (!(engine->win.ptr = mlx_new_window(engine->ptr, engine->win.size_x, engine->win.size_y, __PROJECT_NAME)))
-		return ;
-
-	//SETUP FRAME IMAGE BUFFER INFO
-	engine->buf.size = create_vectori(engine->win.size_x, engine->win.size_y);
-	
-	//PLAYER SETUP
-	engine->player.pos = create_vector(0, 0);
-	engine->player.plane = create_vector(0, 0);
-	engine->player.fov = 90.0F;
-	engine->player.rot = 0;
-	engine->player.rotZ = 0;
-	engine->player.speed = 6;
-	
-	//MAP SETUP
+	create_window(engine, 1280, 720, __PROJECT_NAME);
+	init_camera(engine->win, &engine->camera, 80.0F);
+	engine->player = create_player(create_vector(0, 0), 0, 6.0F);
 	if ((map_fd = open("res/maps/map.cub", O_RDONLY)) > 0)
 	{
 		map = parse_map(map_fd, engine);
 		engine->map = *map;
 		printf("[MAP] Checking map bounds...\n");
-		if (!check_map(engine->map) || (!engine->player.pos.x && !engine->player.pos.y))
+		if (!check_map(engine->map) || (!engine->player.pos.x &&
+			!engine->player.pos.y))
 		{
 			printf("[MAP] Error : INVALID MAP FORMAT\n");
 			p_exit(engine, "Invalid map format.", STATUS_MAP_FAILED);
 		}
 		else
 			printf("[MAP] Valid map format.\n");
-		close (map_fd);
+		close(map_fd);
 	}
-
-	//HOOKS
-	mlx_loop_hook(engine->ptr, runtime, engine);
-	engine->keys = set_key_values();
-
-	mlx_hook(engine->win.ptr, KeyPress, KeyPressMask, key_pressed_event, engine);
-    mlx_hook(engine->win.ptr, KeyRelease, KeyReleaseMask, key_released_event, engine);
-
-	mlx_loop(engine->ptr);
+	set_hooks(engine);
 }
 
-int    runtime (t_engine *engine)
+int		runtime(t_engine *engine)
 {
-	//SETUP FRAME IMAGE BUFFER
-	engine->buf.img_ptr = mlx_new_image(engine->ptr, engine->buf.size.x, engine->buf.size.y);
-	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr, &engine->buf.bpp, &engine->buf.size_l,
-		&engine->buf.endian);
-
-	if (engine->keys.left.pressed)
-		engine->player.rot += 0.06f;
-	
-    if (engine->keys.right.pressed)
-		engine->player.rot -= 0.06f;
-
-	// Since modulo doesnt work for float we need to bound this into [0;TWO_PI] 
-	if (engine->player.rot > TWO_PI)
-		engine->player.rot = 0;
-	else if (engine->player.rot < 0)
-		engine->player.rot = TWO_PI;
-
-	if (engine->keys.up.pressed)
-    {
-		engine->player.vel.x = -cos(engine->player.rot) * engine->player.speed * 0.01f;
-		engine->player.vel.y = -sin(engine->player.rot) * engine->player.speed * 0.01f;
-
-		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)
-			engine->player.pos.x += engine->player.vel.x;
-		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)
-			engine->player.pos.y += engine->player.vel.y;
-    }
-    if (engine->keys.down.pressed)
-	{
-		engine->player.vel.x = cos(engine->player.rot) * engine->player.speed * 0.01f;
-		engine->player.vel.y = sin(engine->player.rot) * engine->player.speed * 0.01f;
-
-		if (engine->map.map[(int)floorf(engine->player.pos.x + engine->player.vel.x * 10.0f)][((int)floorf(engine->player.pos.y))]->id == CUB_AIR)
-			engine->player.pos.x += engine->player.vel.x;
-		if (engine->map.map[(int)floorf(engine->player.pos.x)][((int)floorf(engine->player.pos.y + engine->player.vel.y * 10.0f))]->id == CUB_AIR)
-			engine->player.pos.y += engine->player.vel.y;
-    }
 	if (engine->keys.escape.pressed)
 		p_exit(engine, "Escape key pressed", STATUS_SUCCESS);
-
+	engine->buf.img_ptr = mlx_new_image(engine->ptr,
+		engine->buf.size.x, engine->buf.size.y);
+	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr,
+		&engine->buf.bpp, &engine->buf.size_l, &engine->buf.endian);
+	handle_input(engine);
+	engine->camera.l_angle = engine->player.rot -
+		radians(engine->camera.fov) / 2.0F;
+	engine->camera.r_angle = engine->player.rot +
+		radians(engine->camera.fov) / 2.0F;
 	cast_to_frame_buffer(&engine->buf, engine);
 	render_sprite(*engine, &engine->buf);
 	draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
-
-
-	mlx_put_image_to_window(engine->ptr, engine->win.ptr, engine->buf.img_ptr, 0, 0);
+	mlx_put_image_to_window(engine->ptr, engine->win.ptr,
+		engine->buf.img_ptr, 0, 0);
 	mlx_destroy_image(engine->ptr, engine->buf.img_ptr);
 	return (0);
 }
 
-void    p_exit (t_engine *engine, char *info_log, int status)
+void	p_exit(t_engine *engine, char *info_log, int status)
 {
-	printf ("[EXIT]<REQUEST> : %s\n[EXIT] Clearing data...\n", info_log);
+	t_list *free_tmp;
+
+	printf("[EXIT]<REQUEST> : %s\n[EXIT] Clearing data...\n", info_log);
 	if (status != STATUS_IMG_FAILED)
 		mlx_destroy_window(engine->ptr, engine->win.ptr);
+	destroy_camera(&engine->camera);
+	while (engine->cubes->next && status != STATUS_IMG_FAILED)
+	{
+		free_tmp = engine->cubes->next;
+		free(engine->cubes->content);
+		free(engine->cubes);
+		engine->cubes = free_tmp;
+	}
 	free(engine);
-	printf ("[EXIT] Done.");
+	printf("[EXIT] Done.");
 	exit(0);
 }

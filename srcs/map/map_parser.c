@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 16:23:20 by lrobino           #+#    #+#             */
-/*   Updated: 2020/04/25 13:53:26 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/05/23 00:56:18 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,6 @@ t_map                       *parse_map(int fd, t_engine *engine)
         {
             if(ft_isdigit(buffer->line[i]))
             {
-                /*else if (buffer->line[i] == '0')
-                    map->map[i][j]  = get_cube_by_id(engine, CUB_AIR);
-                else if (buffer->line[i] == '1')
-                    map->map[i][j]  = get_cube_by_id(engine, CUB_BLOCK);*/
                 map->map[i][j] = get_cube_by_id(engine, buffer->line[i]- 48);
                 
             }

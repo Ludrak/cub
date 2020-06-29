@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:24:15 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/11 10:41:51 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/06/29 18:26:47 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ int load_from_xpm(char *png, t_image *img, t_engine engine);
 /*
 **  DRAW UTILS
 */
+
 void        draw_line_to_buffer(t_image *buff, int x, int h, t_color color);
-void        draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float offset, t_vec2d dir, float scale_f);
-void		draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_color color);	
+void        draw_ray_to_buffer(t_engine *eng, int x, t_cast cast);
+void		draw_rect_to_buffer(t_image *buff, t_vec2f pos, t_vec2f size, t_color color);
+
 
 #endif

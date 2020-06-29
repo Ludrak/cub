@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/12 15:14:41 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/11 10:11:30 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/06/29 18:31:49 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,14 @@
 /*
 **  BLOCKS FACES
 */
-# define NONE -1
-# define LEFT 0
-# define RIGHT 1
-# define TOP 2
-# define BOTTOM 3
+# define NONE 0
+# define LEFT 1
+# define RIGHT 2
+# define TOP 3
+# define BOTTOM 4
 
-typedef __uint8_t t_face;
 
-typedef struct  s_cast
-{
-    float   dist;
-    t_vec2d point;
-    t_face  face;
-    float   face_pos;
-    t_cube  *cube;
-}               t_cast;
+//void		draw_ray_to_buffer(t_engine *eng, int x, int h, t_image tex, float offset, t_vec2d p_dir, float scale_f)
 
 typedef struct  s_ray
 {
@@ -47,7 +39,7 @@ void        cast_to_frame_buffer(t_image *buffer, t_engine *engine);
 /**
  *      UTILS 
  */
-t_cast      create_cast_info(t_cube *cube, t_vec2d point, t_vec2d cast_block, t_vec2d dir);
+t_cast      create_cast_info(t_cube *cube, t_vec2d point, t_vec2d cast_block);
 t_ray       create_ray (t_vec2d start, t_vec2d end);
 float       ft_map(float value, float min1, float max1, float min2, float max2);
 

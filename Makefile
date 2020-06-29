@@ -1,265 +1,197 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
-#    Updated: 2020/05/19 22:11:25 by lrobino          ###   ########lyon.fr    #
-#                                                                              #
-# **************************************************************************** #
-
-##	AUTHOR
-AUTHOR			= lrobino
-
-##	VERSION
-VERSION			= 1.1
-
-##	GRAPHICS
-GRAPHICS		= #-D HIGH_GRAPHICS
-
-##	THE DIRECTORY OF YOUR FINAL TARGET
-TARGET_DIR		= .
-
-##	TARGET NAMES FOR BOTH EXECUTABLE AND LIBRARY COMPILATION
-TARGET_LIB		= -
-TARGET_EXE		= cub.out
-
-##	CHOOSE WHICH TARGET TO USE BY DEFAULT
-TARGET			= $(TARGET_EXE)
-
-##	SOURCES DIRECTORY OF YOUR PROJECT (USE '.' IF THEY ARE IN THE CURRENT FOLDER)
-SRC_DIR			= srcs
-
-##	SOURCES OF YOUR PROJECT
-SRCS			=	main.c			\
-					process.c		\
-					map_utils.c		\
-					graphics.c		\
-					color_utils.c	\
-					map_parser.c	\
-					raycast.c		\
-					raycast_utils.c	\
-					math_utils.c	\
-					input.c			\
-					cube.c			\
-					sprite.c		\
-					camera.c
-
-##	BINARIES DIRECTORY OF YOUR PROJECT
-BIN_DIR			= bin
-
-
-##	PUT THE DIRECTORIES OF YOUR HEADER FILES HERE
-HEADERS_DIR		= inc lib/libft lib/libvector lib/libmlx lib/libmlx-linux lib/libgnl /usr/include
-
-##	HEADERS OF YOUR PROJET /!\ USE FULL PATH FROM CURRENT FOLDER /!\ 
-HEADERS			= inc/engine.h inc/process.h inc/map_utils.h inc/map_parser.h inc/graphics.h
-
-##	LIBS DIRECTORY OF YOUR PROJECT (USE '-' IF YOUR PROJECT DO NOT USE LIBRARY)
-LIB_DIR			= lib
-
-##	LIBS THAT YOU ARE USING
-LIBS			= libft lib2
-
-################################################################################
-####					DO NOT EDIT THINGS BELOW THIS						####
-################################################################################
-
 ##
+##		-- Makefile by lrobino --
+##		Used to compile basic c project
+##		Using exernal or local libs
 
-OS				= $(shell uname)
+## TARGET_TYPE
+TARGET_EXE	= cub.out
+TARGET_LIB	= lib.a
 
-OBJS			= $(addprefix $(BIN_DIR)/,$(SRCS:.c=.o))
+## PROJECT NAME (Choose target)
+NAME	= $(TARGET_EXE)
 
-INCLUDES		= $(addprefix -I,$(HEADERS_DIR))
+## SRCS
+SRC_DIR= srcs
 
-ifneq	($(LIB_DIR), -)
-LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libgnl/libgnl.a
+SRCS=	main.c			\
+		process.c		\
+		map/map_utils.c		\
+		graphics/graphics.c		\
+		graphics/color_utils.c	\
+		map/map_parser.c	\
+		graphics/raycast.c		\
+		graphics/raycast_utils.c	\
+		util/math_utils.c	\
+		input/input.c			\
+		input/input_handler.c	\
+		gameobjects/cube.c			\
+		gameobjects/sprite.c		\
+		gameobjects/sprite_utils.c	\
+		gameobjects/camera.c		\
+		gameobjects/player.c		\
+		util/register_handler.c	\
+		util/image_loader.c
+
+## HEADERS
+HEADERS = inc/
+
+## BINS
+BIN_DIR = bin
+OBJS	= $(addprefix $(BIN_DIR)/, $(SRCS:.c=.o))
+
+## LIBS
+LIB				= lib
+## Make sure that libft is in $(LIB) and that it outputs libft.a
+LIB_HEADER		= libft/inc libvector libgnl 
+LOCAL_LIB_DIRS	= libft libgnl libvector
+ifeq ($(shell uname), Linux)
+	LOCAL_LIB_DIRS += libmlx_Linux
+	LIB_HEADER += libmlx_Linux
 endif
-ifeq	($(OS), Darwin)
-LIBFILES		+= lib/libmlx/libmlx.a
+ifeq ($(shell uname), Darwin)
+	LOCAL_LIB_DIRS += libmlx
+	LIB_HEADER += libmlx
 endif
-ifeq	($(OS), Linux)
-LIBFILES		+= lib/libmlx-linux/libmlx.a
+## Use this to add external libs to your project (ex: libm)
+## !! You have to use the "lib" prefix anyway !! 
+EXTERN_LIBS		= libm
+ifeq ($(shell uname), Linux)
+	EXERN_LIBS += libX11 libXext libm
 endif
-##
-
-RM				= rm -rf
-CC				= gcc -c
-GCC				= gcc
-AR				= ar rcus
-CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
-OUT				= --output
-
-ifeq ($(OS), Linux)
-LINKER_FLAGS	= $(INCLUDES) -Llib/libmlx-linux -lmlx -lX11 -lXext -lm
-endif
-ifeq ($(OS), Darwin)
-LINKER_FLAGS	= -framework AppKit -framework OpenGL -lz
+ifeq ($(shell uname), Darwin)
+	EXTERN_LIBS += libz libm
+	FRAMEWORKS = -framework AppKit -framework OpenGL
 endif
 
-
-all : version $(TARGET)
-	@echo "$(C_RESET) Done."
-
-##
-##	LIB TARGET COMPILER	
-##
-lib : $(TARGET_LIB)
-$(TARGET_LIB) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
-	@echo "$(m_LINK) Linking library : $(TARGET_LIB)"
-	@$(AR) $(TARGET_LIB) $(OBJS) $(LIBFILES)
-	@echo "$(m_LINK) Link success !"
-
+## GCC
+CC			= gcc -c
+GCC			= gcc
+OUT			= --output
+CFLAGS		= -Werror -Wextra -Wall
 
 ##
-##	EXECUTABLE TARGET COMPILER
+##			---- COLORS ----
 ##
-exe : $(TARGET_EXE)
-$(TARGET_EXE) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
-	@echo "$(m_LINK) Making target $(TARGET_EXE)"
-	@$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(OBJS) $(LINKER_FLAGS) $(LIBFILES) 
-	@echo "$(m_LINK) Link success !"
+
+
+#							--> Regular Colors
+BLACK=		\033[0;30m
+RED=		\033[0;31m
+GREEN=		\033[0;32m
+YELLOW=		\033[0;33m
+BLUE=		\033[0;34m
+PURPLE=		\033[0;35m
+CYAN=		\033[0;36m
+WHITE=		\033[0;37m
+
+#							--> Bold
+BBLACK=		\033[1;30m
+BRED=		\033[1;31m
+BGREEN=		\033[1;32m
+BYELLOW=	\033[1;33m
+BBLUE=		\033[1;34m
+BPURPLE=	\033[1;35m
+BCYAN=		\033[1;36m
+BWHITE=		\033[1;37m
+
+
 
 ##
-##	BINS
+##			---- RULES ----
 ##
+
+
+
+## Require NAME and prints descritpion(42 norm)
+all: desc $(NAME)
+	@echo "Done"
+
+
+
+## Prints a short description of what is compiling.
+desc :
+	@printf "$(BPURPLE)>>> Making target $(CYAN)"
+	@if [ $(NAME) = $(TARGET_EXE) ] ; then \
+		printf "exe $(BPURPLE)-> '$(NAME)'\n$(WHITE)" ; \
+	else \
+		printf "lib $(BPURPLE)-> '$(NAME)'\n$(WHITE)" ; \
+	fi
+
+
+
+## EXE
+## Require all .a
+## Require bin dir and objs
+## Require headers
+## -> Links the objs with libs.
+#$(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a)
+$(TARGET_EXE) : libs $(BIN_DIR) $(OBJS) $(HEADERS)
+	@echo "$(BGREEN)Linked program $(CYAN)'$(NAME)'$(WHITE)."
+	@$(GCC) $(OUT) $(NAME) $(CFLAGS) $(LOCAL_LIB_DIRS:%=-L$(LIB)/%) $(OBJS) $(LOCAL_LIB_DIRS:lib%=-l%) $(EXERN_LIBS:lib%=-l%) $(FRAMEWORKS)
+
+
+
+## LIB
+## Require all .a
+## Require bin dir and objs
+## Require headers
+## -> Links the objs with libs.
+$(TARGET_LIB) : $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a) $(BIN_DIR) $(OBJS) $(HEADERS)
+	@echo "$(BGREEN)Linked library $(CYAN)'$(NAME)'$(WHITE)."
+	@ar rcs $(NAME) $(OBJS) $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a)
+
+
+
+## Makes the bin dir.
 $(BIN_DIR) :
+	@echo "$(BYELLOW)Warning : no $(BIN_DIR) found.\ncreating one..."
 	@mkdir -p $(BIN_DIR)
-	@echo "$(m_WARN) $(BIN_DIR)/ Not found, created one.$(C_RESET)";
 
 
 
-$(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADERS)
-	@printf "$(m_COMP) Compiling : $<"
-	@$(CC) $< $(CFLAGS) $(OUT) $@ $(INCLUDES) $(GRAPHICS)
-	@echo "\r$(m_COMP) Compiled : $<   "
+## Require a C source
+## -> Compiles a c source to a bin o file
+$(BIN_DIR)/%.o : $(SRC_DIR)/%.c
+	@printf$D "\r$(BWHITE)[$(BGREEN)✔️$(BWHITE)] Compiled : $(BGREEN)$<$(WHITE)\n"
+	@mkdir -p $(shell dirname $@)
+	@$(CC) $(OUT) $@ $(LIB_HEADER:%=-I$(LIB)/%) $(HEADERS:%=-I%) -I/usr/include $< $(CFLAGS)
 
 
 
-##
-##	LIB
-##
-$(LIB_DIR)/ :
-ifneq	($(LIB_DIR), -)
-	@echo "$(m_ERR) Could not find $(LIB_DIR)/ directory !"
-endif
+## Require libs .a (is they exist ?)
+## -> Makes libs.
+#$(LOCAL_LIB_DIRS:%=$(LIB)/%/%.a) : $(LOCAL_LIB_DIRS:%=$(LIB)/%/)
+libs :
+	@for lib in $(LOCAL_LIB_DIRS) ; do \
+		make -C $(LIB)/$${lib} ; \
+	done
 
-$(LIB_DIR)/%/libft.a : $(LIB_DIR)/%
-	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
-	@$(MAKE) -C $<
-
-$(LIB_DIR)/%/libvector.a : $(LIB_DIR)/%
-	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
-	@$(MAKE) -C $<
-
-$(LIB_DIR)/%/libgnl.a : $(LIB_DIR)/%
-	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
-	@$(MAKE) -C $<
-
-$(LIB_DIR)/libmlx/libmlx.a : $(LIB_DIR)/libmlx
-	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
-	@$(MAKE) -C $<
+ #$(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a) :  $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/)
+#	@make -C $<
 
 
-$(LIB_DIR)/libmlx-linux/libmlx.a : $(LIB_DIR)/libmlx-linux
-	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
-	@$(MAKE) -C $<
-
-
-
-
-##
-##	CLEAN
-##
-cl : clean
+## -> Cleans the binarys
 clean :
-	@$(MAKE) -C lib/libft clean
-	@$(MAKE) -C lib/libvector clean
-	@$(MAKE) -C lib/libgnl clean
-ifeq ($(OS), Darwin)
-	@$(MAKE) -C lib/libmlx clean
-endif
-ifeq ($(OS), Linux)
-	@$(MAKE) -C lib/libmlx-linux clean
-endif
-	@$(RM) $(BIN_DIR)
-	@echo "$(m_REMV) Removed .o files."
+	@echo "$(BRED)Cleaning o files"
+	@rm -rf $(BIN_DIR)
+	@for lib in $(LOCAL_LIB_DIRS) ; do \
+		make -C $(LIB)/$${lib} clean ; \
+	done
 
 
 
-fc : fclean
+## Requires clean
+## -> Cleans the executable
 fclean : clean
-	@$(RM) $(TARGET_EXE)
-	@$(RM) $(TARGET_EXE).dSYM
-	@$(MAKE) -C lib/libft fclean
-	@$(MAKE) -C lib/libvector fclean
-	@$(MAKE) -C lib/libgnl fclean
-	@echo "$(m_REMV) Removed target : '$(TARGET)'"
+	@echo "$(BRED)Cleaning all"
+	@rm -rf $(NAME)
+	@for lib in $(LOCAL_LIB_DIRS) ; do \
+		if [ $${lib} != "libmlx_Linux" ] ; then \
+		make -C $(LIB)/$${lib} fclean ; \
+		fi \
+	done
+	@make -C $(LIB)/libmlx_Linux clean
 
 
 
-##
-##	UTILS
-##
-norm : version
-	@echo "$(m_INFO) Norme for : '$(TARGET_LIB)'\n-->"
-	@norminette
-
-
-
-v : version
-version :
-	@printf "\e[1;1H\e[2J"
-	@echo "$(BBLUE)#################################################################################"
-	@echo "#                                                                               #"
-	@echo "#           :::      ::::::::                                                   #"
-	@echo "#         :+:      :+:    :+:                                                   #"
-	@echo "#       +:+ +:+         +:+                                                     #"
-	@echo "#     +#+  +:+       +#+                                                        #"
-	@echo "#   +#+#+#+#+#+   +#+                                                           #"
-	@echo "#         #+#    #+#                                                            #"
-	@echo "#        ###   ######## - Lyon                                                  #"
-	@echo "#                                                                               #"
-	@echo "#$(C_RESET)>-----------------------------------------------------------------------------<$(BBLUE)#"
-	@printf "#$(C_RESET)   Project : %-20.20s                                              $(BBLUE)#\n" $(TARGET)
-	@printf "#$(C_RESET)   Version : %-15.15s                       Author : %-10.10s         $(BBLUE)#\n" $(VERSION) $(AUTHOR)
-	@echo "#################################################################################$(C_RESET)\n\n"
-
-
-##
-##	COLORS
-##
-
-C_RESET= \033[0m
-BGREEN = \033[1;32m
-GREEN = \033[0;32m
-YELLOW	= \033[0;33m
-BYELLOW = \033[1;33m
-PURPLE = \033[0;35m
-BPURPLE = \033[1;35m
-BRED	= \033[1;31m
-RED		= \033[0;31m
-BLUE	= \033[0;34m
-BBLUE	= \033[1;34m
-
-m_MAKE		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)MAKE$(C_RESET)] :
-m_INFO		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)INFO$(C_RESET)] :
-m_LINK		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)LINK$(C_RESET)] :
-m_COMP		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)COMP$(C_RESET)] :
-
-m_WARN		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BYELLOW)WARN$(C_RESET)] :$(YELLOW)
-m_REMV		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BRED)CLEAN$(C_RESET)] :$(BYELLOW)
-m_ERR		= $(C_RESET)[$(BRED) $(TARGET) $(C_RESET)] [$(BRED)ERROR$(C_RESET)] :$(BYELLOW)
-
-
-##
-##	SHORTCUTS
-##
-re : version fclean all
-
-################################################################################
-
-.PHONY	: all re fclean fc clean version v exe lib
+re : clean fclean all

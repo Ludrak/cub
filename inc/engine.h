@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/05/19 22:13:51 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/06/29 18:31:57 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define __PROJECT_NAME "Cub3d - 1.1.0"
 
 # define MAX_VIEW       10
+
+//THOSE ARE THE HEIGHT OF THE SCREEN TODO REPLACE
 # define VIEW_HEIGHT    720
 # define VIEW_WIDTH     720
 
@@ -38,7 +40,8 @@ typedef struct  s_window
 
 typedef struct  s_camera
 {
-    int         fov;
+    float       fov;
+    float       height;
     float       l_angle;
     float       r_angle;
     float       *z_buffer;
@@ -72,6 +75,20 @@ typedef struct  s_cube
     t_image     tex;
     short       id;
 }               t_cube;
+
+typedef __uint8_t t_face;
+typedef struct  s_cast
+{
+    float   wall_h;
+    float   offset;
+    float   scale_f;
+
+    float   dist;
+    t_vec2d point;
+    t_face  face;
+    float   face_pos;
+    t_cube  *cube;
+}               t_cast;
 
 
 typedef struct  s_map
@@ -112,9 +129,12 @@ typedef struct  s_engine
     //MAP
     t_map           map;
     t_list          *cubes;
+    t_list          *loaded_sprites;
+    t_list          *sprites;
 
     t_image         cub_tex_floor;
     t_image         cub_tex_ceil;
+    t_image         phantom;
 }               t_engine;
 
 # include "map_utils.h"
@@ -124,10 +144,25 @@ typedef struct  s_engine
 # include "sprite.h"
 # include "map_parser.h"
 
+
+/*
+**  REGISTER HANDLER
+*/
+void    register_cubes(t_engine *eng);
+void    register_sprites(t_engine *eng);
+
+
+/*
+**  PLAYER UTILS
+*/
+t_player    create_player(t_vec2d pos, float rot, float speed);
+
+
 /*
 **  CAMERA UTILS
 */
-void    init_camera(t_window win, t_camera *cam, int fov);
+void    init_camera(t_window win, t_camera *cam, float fov);
+void	destroy_camera(t_camera *cam);
 
 
 /*
@@ -139,14 +174,23 @@ t_cube      *get_cube_by_id(t_engine *eng, short id);
 /*
 **  MATH UTILS
 */
-float   radians (float deg);
+float   radians(float deg);
+float   degrees(float rad);
 float   max(float a, float b);
 int     constrain(int value, int min, int max);
 
 
 /*
-**  INPUTS
+**  WINDOW & HOOKS
 */
+int             create_window(t_engine *eng, int sizeX, int sizeY, char *title);
+void            set_hooks(t_engine *eng);
+int             on_window_destroyed(void *eng);
+
+/*
+**  INPUT UTILS
+*/
+void            handle_input(t_engine *eng);
 t_control_keys  set_key_values();
 int             key_released_event(int key, void *engine_ptr);
 int             key_pressed_event(int key, void *engine_ptr);

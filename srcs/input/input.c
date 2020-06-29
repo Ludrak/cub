@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/17 13:19:30 by coralie           #+#    #+#             */
-/*   Updated: 2020/05/14 22:12:52 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 14:03:16 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int     key_pressed_event(int key, void *engine_ptr)
         engine->keys.right.pressed = 1;
     if (key == engine->keys.escape.value)
         engine->keys.escape.pressed = 1;
-    return (0);
+    return (key);
 }
 
 int     key_released_event(int key, void *engine_ptr)
@@ -43,7 +43,7 @@ int     key_released_event(int key, void *engine_ptr)
         engine->keys.right.pressed = 0;
     if (key == engine->keys.escape.value)
         engine->keys.escape.pressed = 0;
-    return (0);
+    return (key);
 }
 
 t_control_keys    set_key_values()

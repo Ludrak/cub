@@ -1,0 +1,271 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/11/28 00:13:18 by lrobino           #+#    #+#              #
+#    Updated: 2020/06/29 18:39:19 by lrobino          ###   ########lyon.fr    #
+#                                                                              #
+# **************************************************************************** #
+
+##	AUTHOR
+AUTHOR			= lrobino
+
+##	VERSION
+VERSION			= 1.1
+
+##	GRAPHICS
+GRAPHICS		= #-D HIGH_GRAPHICS
+
+##	THE DIRECTORY OF YOUR FINAL TARGET
+TARGET_DIR		= .
+
+##	TARGET NAMES FOR BOTH EXECUTABLE AND LIBRARY COMPILATION
+TARGET_LIB		= -
+TARGET_EXE		= cub.out
+
+##	CHOOSE WHICH TARGET TO USE BY DEFAULT
+TARGET			= $(TARGET_EXE)
+
+##	SOURCES DIRECTORY OF YOUR PROJECT (USE '.' IF THEY ARE IN THE CURRENT FOLDER)
+SRC_DIR			= srcs
+
+##	SOURCES OF YOUR PROJECT
+SRCS			=	main.c			\
+					process.c		\
+					map/map_utils.c		\
+					graphics/graphics.c		\
+					graphics/color_utils.c	\
+					map/map_parser.c	\
+					graphics/raycast.c		\
+					graphics/raycast_utils.c	\
+					util/math_utils.c	\
+					input/input.c			\
+					input/input_handler.c	\
+					gameobjects/cube.c			\
+					gameobjects/sprite.c		\
+					gameobjects/sprite_utils.c	\
+					gameobjects/camera.c		\
+					gameobjects/player.c		\
+					util/register_handler.c	\
+					util/image_loader.c
+
+##	BINARIES DIRECTORY OF YOUR PROJECT
+BIN_DIR			= bin
+
+
+##	PUT THE DIRECTORIES OF YOUR HEADER FILES HERE
+HEADERS_DIR		= inc lib/libft/inc lib/libvector lib/libmlx lib/libmlx-linux lib/libgnl /usr/include
+
+##	HEADERS OF YOUR PROJET /!\ USE FULL PATH FROM CURRENT FOLDER /!\ 
+HEADERS			= inc/engine.h inc/process.h inc/map_utils.h inc/map_parser.h inc/graphics.h
+
+##	LIBS DIRECTORY OF YOUR PROJECT (USE '-' IF YOUR PROJECT DO NOT USE LIBRARY)
+LIB_DIR			= lib
+
+##	LIBS THAT YOU ARE USING
+LIBS			= libft
+
+################################################################################
+####					DO NOT EDIT THINGS BELOW THIS						####
+################################################################################
+
+##
+
+OS				= $(shell uname)
+
+OBJS			= $(addprefix $(BIN_DIR)/,$(SRCS:.c=.o))
+
+INCLUDES		= $(addprefix -I,$(HEADERS_DIR))
+
+ifneq	($(LIB_DIR), -)
+LIBFILES		= lib/libft/libft.a lib/libvector/libvector.a lib/libgnl/libgnl.a
+endif
+ifeq	($(OS), Darwin)
+LIBFILES		+= lib/libmlx/libmlx.a
+endif
+ifeq	($(OS), Linux)
+LIBFILES		+= lib/libmlx-linux/libmlx.a
+endif
+##
+
+RM				= rm -rf
+CC				= gcc -c
+GCC				= gcc
+AR				= ar rcus
+CFLAGS			= -Wall -Wextra -Werror -g3 -fsanitize=address
+OUT				= --output
+
+ifeq ($(OS), Linux)
+LINKER_FLAGS	= $(INCLUDES) -Llib/libmlx-linux -lmlx -lX11 -lXext -lm
+endif
+ifeq ($(OS), Darwin)
+LINKER_FLAGS	= -framework AppKit -framework OpenGL -lz
+endif
+
+
+all : version $(TARGET)
+	@echo "$(C_RESET) Done."
+
+##
+##	LIB TARGET COMPILER	
+##
+lib : $(TARGET_LIB)
+$(TARGET_LIB) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
+	@echo "$(m_LINK) Linking library : $(TARGET_LIB)"
+	@$(AR) $(TARGET_LIB) $(OBJS) $(LIBFILES)
+	@echo "$(m_LINK) Link success !"
+
+
+##
+##	EXECUTABLE TARGET COMPILER
+##
+exe : $(TARGET_EXE)
+$(TARGET_EXE) : $(LIB_DIR)/ $(LIBFILES) $(BIN_DIR) $(OBJS)
+	@echo "$(m_LINK) Making target $(TARGET_EXE)"
+	@$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(OBJS) $(LINKER_FLAGS) $(LIBFILES) 
+	@echo "$(m_LINK) Link success !"
+
+##
+##	BINS
+##
+$(BIN_DIR) :
+	@mkdir -p $(BIN_DIR)
+	@echo "$(m_WARN) $(BIN_DIR)/ Not found, created one.$(C_RESET)";
+
+
+
+$(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADERS)
+	@printf "$(m_COMP) Compiling : $<"
+	@mkdir -p $(shell dirname $@)
+	@$(CC) $< $(CFLAGS) $(OUT) $@ $(INCLUDES) $(GRAPHICS)
+	@echo "\r$(m_COMP) Compiled : $<   "
+
+
+
+##
+##	LIB
+##
+$(LIB_DIR)/ :
+ifneq	($(LIB_DIR), -)
+	@echo "$(m_ERR) Could not find $(LIB_DIR)/ directory !"
+endif
+
+$(LIB_DIR)/%/libft.a : $(LIB_DIR)/%
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+$(LIB_DIR)/%/libvector.a : $(LIB_DIR)/%
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+$(LIB_DIR)/%/libgnl.a : $(LIB_DIR)/%
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+$(LIB_DIR)/libmlx/libmlx.a : $(LIB_DIR)/libmlx
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+
+$(LIB_DIR)/libmlx-linux/libmlx.a : $(LIB_DIR)/libmlx-linux
+	@echo "$(m_MAKE) COMPILING LIB : $<$(C_RESET)"
+	@$(MAKE) -C $<
+
+
+
+
+##
+##	CLEAN
+##
+cl : clean
+clean :
+	@$(MAKE) -C lib/libft clean
+	@$(MAKE) -C lib/libvector clean
+	@$(MAKE) -C lib/libgnl clean
+ifeq ($(OS), Darwin)
+	@$(MAKE) -C lib/libmlx clean
+endif
+ifeq ($(OS), Linux)
+	@$(MAKE) -C lib/libmlx-linux clean
+endif
+	@$(RM) $(BIN_DIR)
+	@echo "$(m_REMV) Removed .o files."
+
+
+
+fc : fclean
+fclean : clean
+	@$(RM) $(TARGET_EXE)
+	@$(RM) $(TARGET_EXE).dSYM
+	@$(MAKE) -C lib/libft fclean
+	@$(MAKE) -C lib/libvector fclean
+	@$(MAKE) -C lib/libgnl fclean
+	@echo "$(m_REMV) Removed target : '$(TARGET)'"
+
+
+
+##
+##	UTILS
+##
+norm : version
+	@echo "$(m_INFO) Norme for : '$(TARGET_LIB)'\n-->"
+	@norminette
+
+
+
+v : version
+version :
+	@printf "\e[1;1H\e[2J"
+	@echo "$(BBLUE)#################################################################################"
+	@echo "#                                                                               #"
+	@echo "#           :::      ::::::::                                                   #"
+	@echo "#         :+:      :+:    :+:                                                   #"
+	@echo "#       +:+ +:+         +:+                                                     #"
+	@echo "#     +#+  +:+       +#+                                                        #"
+	@echo "#   +#+#+#+#+#+   +#+                                                           #"
+	@echo "#         #+#    #+#                                                            #"
+	@echo "#        ###   ######## - Lyon                                                  #"
+	@echo "#                                                                               #"
+	@echo "#$(C_RESET)>-----------------------------------------------------------------------------<$(BBLUE)#"
+	@printf "#$(C_RESET)   Project : %-20.20s                                              $(BBLUE)#\n" $(TARGET)
+	@printf "#$(C_RESET)   Version : %-15.15s                       Author : %-10.10s         $(BBLUE)#\n" $(VERSION) $(AUTHOR)
+	@echo "#################################################################################$(C_RESET)\n\n"
+
+
+##
+##	COLORS
+##
+
+C_RESET= \033[0m
+BGREEN = \033[1;32m
+GREEN = \033[0;32m
+YELLOW	= \033[0;33m
+BYELLOW = \033[1;33m
+PURPLE = \033[0;35m
+BPURPLE = \033[1;35m
+BRED	= \033[1;31m
+RED		= \033[0;31m
+BLUE	= \033[0;34m
+BBLUE	= \033[1;34m
+
+m_MAKE		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)MAKE$(C_RESET)] :
+m_INFO		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)INFO$(C_RESET)] :
+m_LINK		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)LINK$(C_RESET)] :
+m_COMP		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(PURPLE)COMP$(C_RESET)] :
+
+m_WARN		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BYELLOW)WARN$(C_RESET)] :$(YELLOW)
+m_REMV		= $(C_RESET)[$(BBLUE) $(TARGET) $(C_RESET)] [$(BRED)CLEAN$(C_RESET)] :$(BYELLOW)
+m_ERR		= $(C_RESET)[$(BRED) $(TARGET) $(C_RESET)] [$(BRED)ERROR$(C_RESET)] :$(BYELLOW)
+
+
+##
+##	SHORTCUTS
+##
+re : version fclean all
+
+################################################################################
+
+.PHONY	: all re fclean fc clean version v exe lib
