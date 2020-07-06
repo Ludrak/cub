@@ -1,0 +1,27 @@
+RESOLUTION 1280 720
+
+CUBE ./res/textures/dungeon_wall.xpm            1
+CUBE ./res/textures/dungeon_wall_torch.xpm      2
+CUBE ./res/textures/dungeon_wall_cracked.xpm    3
+
+SPRITE ./res/textures/phantom.xpm               0
+SPRITE ./res/textures/phantom.xpm               1
+
+FLOOR ./res/textures/dungeon_floor.xpm
+CEIL ./res/textures/dungeon_ceil.xpm
+
+111121113211131
+300000000000001
+200W00031211101
+1000000B1113103
+131121311100001
+111211133101311
+111031000001111
+111012000002111
+11100000A003111
+111312000001111
+111111111011111111
+111111121031111
+111300000000031
+111100000000031
+111131123311111

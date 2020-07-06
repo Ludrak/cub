@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/06/29 21:36:38 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/05 19:50:07 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,20 +95,21 @@ void			cast_to_frame_buffer(t_image *buffer, t_engine *engine)
 	t_cast	cast;
 	t_vec2d	r_dir;
 
-	angle = radians(engine->camera.fov) / (float)buffer->size.x;
-	a = -radians(engine->camera.fov / 2.0F);
+	angle = rad(engine->cam.fov) / (float)buffer->size.x;
+	a = -rad(engine->cam.fov / 2.0F);
 	i = 0;
-	while (a <= radians((engine->camera.fov) / 2.0F)
+	while (a <= rad((engine->cam.fov) / 2.0F)
 		&& i < engine->buf.size.x - 1)
 	{
 		r_dir.x = cos(a + engine->player.rot);
 		r_dir.y = sin(a + engine->player.rot);
 		cast = perform_raycast(engine, engine->player.pos, r_dir, engine->map);
 		cast.point = vec_sub(cast.point, engine->player.pos);
-		engine->camera.z_buffer[i] = vec_mag(cast.point);
-		cast.wall_h = (VIEW_HEIGHT) / (cos(a) * engine->camera.z_buffer[i]);
+		engine->cam.z_buffer[i] = vec_mag(cast.point);
+		cast.wall_h = engine->win.size_y / (cos(a) * engine->cam.z_buffer[i]);
 		cast.scale_f = cos(a);
-		draw_ray_to_buffer(engine, i, cast);
+		if(cast.cube)
+			draw_ray_to_buffer(engine, i, cast);
 		i++;
 		a += angle;
 	}

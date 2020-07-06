@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/06/29 22:25:36 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/03 14:29:28 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,16 @@ void		draw_line_to_buffer(t_image *buff, int x, int h, t_color color)
 	}
 }
 
+static void	draw_floor_color(t_engine *eng, int x, int y)
+{
+	while (y < eng->buf.size.y - 1)
+	{
+		eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->floor_col.value;
+		eng->buf.data[x + ((eng->buf.size.y - y++) * (int)eng->buf.size.x)] =
+			eng->ceil_col.value;
+	}
+}
+
 static void	draw_floor(t_engine *eng, int x, int y, t_cast cast)
 {
 	t_vec2d		dir;
@@ -34,53 +44,52 @@ static void	draw_floor(t_engine *eng, int x, int y, t_cast cast)
 	t_vec2i		t;
 	float		dir_z;
 
-	dir.y = sin(eng->player.rot + PI + (ft_map(x, 0, eng->buf.size.x,
-		-radians(eng->camera.fov) / 2, radians(eng->camera.fov) / 2)));
-	dir.x = cos(eng->player.rot + PI + (ft_map(x, 0, eng->buf.size.x,
-		-radians(eng->camera.fov) / 2, radians(eng->camera.fov) / 2)));
+	dir.y = eng->player.rot + PI + (ft_map(x, vec2f(0, eng->buf.size.x),
+		vec2f(-rad(eng->cam.fov) / 2, rad(eng->cam.fov) / 2)));
+	dir.x = cos(dir.y);
+	dir.y = sin(dir.y);
 	r_pos = eng->player.pos;
 	while (y < eng->buf.size.y - 1)
 	{
-		dir_z = sin(PI + ft_map(y, 0, eng->buf.size.y, -0.5f, 0.5f))
-			* cast.scale_f;
-		cast_v = create_vector(dir.x * ((1.0F - eng->camera.height) / dir_z)
-			+ r_pos.x, dir.y * ((1.0F - eng->camera.height) / dir_z) + r_pos.y);
-		t.x = (int)((cast_v.x - floor(cast_v.x)) * (cast.cube->tex.size.x));
-		t.y = (int)((cast_v.y - floor(cast_v.y)) * (cast.cube->tex.size.y));
-		eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->cub_tex_floor.data
-			[(int)(cast.cube->tex.size.x * t.x + t.y)];
+		dir_z = sin(PI + ft_map(y, create_vectorf(0, eng->buf.size.y),
+			create_vectorf(-0.5f, 0.5f))) * cast.scale_f;
+		cast_v = create_vector(dir.x * ((1.0F - eng->cam.height) / dir_z)
+			+ r_pos.x, dir.y * ((1.0F - eng->cam.height) / dir_z) + r_pos.y);
+		t.x = (int)((cast_v.x - floor(cast_v.x)) * (cast.tex->size.x));
+		t.y = (int)((cast_v.y - floor(cast_v.y)) * (cast.tex->size.y));
+		eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->cub_tex_floor->data
+			[(int)(cast.tex->size.x * t.x + t.y)];
 		eng->buf.data[x + ((eng->buf.size.y - y++) * (int)eng->buf.size.x)] =
-			eng->cub_tex_ceil.data[(int)(cast.cube->tex.size.x * t.x + t.y)];
+			eng->cub_tex_ceil->data[(int)(cast.tex->size.x * t.x + t.y)];
 	}
 }
 
 void		draw_ray_to_buffer(t_engine *eng, int x, t_cast cast)
 {
 	int		y;
-	int		start_h;
-	int		h_offset;
-	int		i;
 	int		pos;
+	double	i;
+	double	offset;
+	double	clip_offset;
 
-	i = 0;
-	h_offset = 0;
-	if (cast.wall_h > eng->buf.size.y &&
-		(h_offset = (cast.wall_h - eng->buf.size.y) / 2))
+	clip_offset = (cast.wall_h <= eng->buf.size.y) ? 0 :
+		(cast.wall_h - (float)eng->buf.size.y) *
+		cast.tex->size.y / cast.wall_h;
+	offset = (double)(cast.tex->size.y) / cast.wall_h;
+	if (clip_offset != 0)
 		cast.wall_h = eng->buf.size.y;
-	start_h = cast.wall_h;
-	y = (eng->buf.size.y * eng->camera.height) - cast.wall_h / 2;
-	while (cast.wall_h-- > 0 && x +
-		(++y * (int)eng->buf.size.x) < eng->buf.size.x * eng->buf.size.y)
+	i = clip_offset / 2.0F;
+	y = eng->buf.size.y / 2 - cast.wall_h / 2;
+	while (cast.wall_h-- > 0 && y < eng->buf.size.y)
 	{
-		pos = (int)ft_map(cast.face_pos, 0, 1, 0,
-		cast.cube->tex.size.x) + (int)ft_map(i, -h_offset, start_h + h_offset,
-		0, cast.cube->tex.size.y) * cast.cube->tex.size.x;
-		if (pos < cast.cube->tex.size.x * cast.cube->tex.size.y)
-			eng->buf.data[x + (y * (int)eng->buf.size.x)] =
-				cast.cube->tex.data[pos];
-		i++;
+		pos = (cast.face_pos * (double)cast.tex->size.x)
+			+ (((int)(i += offset)) * (double)cast.tex->size.y);
+		if (pos >= 0 && pos < cast.tex->size.x * cast.tex->size.y)
+			eng->buf.data[x + (y++ * (int)eng->buf.size.x)] =
+				cast.tex->data[pos];
 	}
-	draw_floor(eng, x, y, cast);
+	(eng->format == FORMAT) ? draw_floor_color(eng, x, y)
+		: draw_floor(eng, x, y, cast);
 }
 
 void		draw_rect_to_buffer

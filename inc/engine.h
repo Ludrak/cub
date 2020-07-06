@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/06/29 18:31:57 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/06 15:58:42 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,23 @@
 # include "vectors.h"
 # include "mlx.h"
 
-# define __PROJECT_NAME "Cub3d - 1.1.0"
+# define __PROJECT_NAME "Cub3d - 1.2.0"
 
 # define MAX_VIEW       10
 
 //THOSE ARE THE HEIGHT OF THE SCREEN TODO REPLACE
 # define VIEW_HEIGHT    720
 # define VIEW_WIDTH     720
+
+# define CREATED_WIN    1
+# define CREATED_CAM    2
+# define CREATED_PLAYER 4
+# define CREATED_MAP    8
+# define CREATED_CUBES  16
+# define CREATED_SPRITE 32
+
+# define PLAYER_SPEED   8.0F // 12.0F if custom
+# define ROTATION_SPEED 0.08F; // 0.12F if custom
 
 
 typedef struct  s_window
@@ -52,7 +62,7 @@ typedef struct	s_image
 	void		*img_ptr;
 	int			*data;
 
-	int			size_l;
+	int			sl;
 	int			bpp;
 	int			endian;
     t_vec2i     size;
@@ -72,8 +82,8 @@ typedef struct  s_player
 
 typedef struct  s_cube
 {
-    t_image     tex;
     short       id;
+    t_image     *tex[5];
 }               t_cube;
 
 typedef __uint8_t t_face;
@@ -88,6 +98,7 @@ typedef struct  s_cast
     t_face  face;
     float   face_pos;
     t_cube  *cube;
+    t_image *tex;
 }               t_cast;
 
 
@@ -111,7 +122,22 @@ typedef struct	s_control_keys
 	t_key		left;
 	t_key		right;
     t_key       escape;
+    t_key       show_map;
 }				t_control_keys;
+
+
+typedef struct  s_color_channel
+{
+    int     b : 8;
+    int     g : 8;
+    int     r : 8;
+}               t_color_channel;
+
+typedef union   u_color
+{
+    t_color_channel channel;
+    unsigned int value : 24;
+}               t_color;
 
 typedef struct  s_engine
 {
@@ -119,7 +145,10 @@ typedef struct  s_engine
     void            *ptr;
     t_window        win;
     t_image         buf;
-    t_camera        camera;
+    t_camera        cam;
+
+    int             allocs;
+    int             format;
     
     t_player        player;
     
@@ -132,10 +161,23 @@ typedef struct  s_engine
     t_list          *loaded_sprites;
     t_list          *sprites;
 
-    t_image         cub_tex_floor;
-    t_image         cub_tex_ceil;
-    t_image         phantom;
+    t_color         floor_col;
+    t_color         ceil_col;
+    t_image         *cub_tex_floor;
+    t_image         *cub_tex_ceil;
+    t_image         *textures[4]; // TEXTURES OF WALLS, ONLY USED WHEN FORMAT
+    t_list          *loaded_textures;
+    t_list          *animations;
 }               t_engine;
+
+typedef struct  s_anim
+{
+    t_image     **anim_ptr;
+    t_list      *frames;
+    float       latency;
+    float       curr_lat;
+}               t_anim;
+
 
 # include "map_utils.h"
 # include "raycast.h"
@@ -143,25 +185,39 @@ typedef struct  s_engine
 # include "process.h"
 # include "sprite.h"
 # include "map_parser.h"
+# include "parser.h"
 
 
 /*
 **  REGISTER HANDLER
 */
-void    register_cubes(t_engine *eng);
-void    register_sprites(t_engine *eng);
+void	register_builtins(t_engine *eng);
+int		register_cube_format(t_engine *eng, short id);
+
+/*
+**  UNLOADING HANDLER
+*/
+void	print_exit_status(int status);
+void    unload_cubes(t_engine *eng);
+void    unload_sprites(t_engine *eng);
+void    unload_textures(t_engine *eng);
+void    unload_map(t_engine *eng);
+
 
 
 /*
 **  PLAYER UTILS
 */
-t_player    create_player(t_vec2d pos, float rot, float speed);
+t_player	create_player(t_engine *eng, t_vec2d pos, float rot, float speed);
+void		move_player(t_player *player, int dir, t_map map);
+void		rotate_player(t_player *player, int dir);
+
 
 
 /*
 **  CAMERA UTILS
 */
-void    init_camera(t_window win, t_camera *cam, float fov);
+void	init_camera(t_engine *eng, t_camera *cam, float fov);
 void	destroy_camera(t_camera *cam);
 
 
@@ -169,13 +225,14 @@ void	destroy_camera(t_camera *cam);
 **  CUBE UTILS
 */
 int         register_cube(t_engine *eng, char *tex_file, short id);
+void	    unload_cube(t_list *cube);
 t_cube      *get_cube_by_id(t_engine *eng, short id);
 
 /*
 **  MATH UTILS
 */
-float   radians(float deg);
-float   degrees(float rad);
+float   rad(float deg);
+float   deg(float rad);
 float   max(float a, float b);
 int     constrain(int value, int min, int max);
 
@@ -194,5 +251,12 @@ void            handle_input(t_engine *eng);
 t_control_keys  set_key_values();
 int             key_released_event(int key, void *engine_ptr);
 int             key_pressed_event(int key, void *engine_ptr);
+
+/*
+**  ANIMATOR
+*/
+t_anim      *create_animation(t_engine *eng, float latency);
+void        set_anim_ptr(t_anim *anim, t_image **tex_ptr);
+void        add_animation_frame(t_anim *anim, t_image *frame);
 
 #endif

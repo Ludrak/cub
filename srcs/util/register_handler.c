@@ -1,19 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   register_handler.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/30 18:32:27 by lrobino           #+#    #+#             */
+/*   Updated: 2020/07/05 17:58:19 by lrobino          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "engine.h"
+#include "engine.h"
 
-void    register_cubes(t_engine *eng)
+void	register_builtins(t_engine *eng)
 {
-    eng->cubes = NULL;
-    register_cube(eng, NULL, CUB_VOID);
-	register_cube(eng, NULL, CUB_AIR);
-	register_cube(eng, "res/textures/dungeon_wall.xpm", CUB_BLOCK);
-	register_cube(eng, "res/textures/dungeon_wall_torch.xpm", CUB_BLOCK_TORCH);
-	register_cube(eng, "res/textures/dungeon_wall_cracked.xpm", CUB_BLOCK_CRACKED);
-}
+	int	i;
 
-void    register_sprites(t_engine *eng)
-{
-    eng->loaded_sprites = NULL;
-    eng->sprites = NULL;
-    register_sprite(eng, "res/textures/phantom.xpm", 0);
+	i = 0;
+	while (i < 4)
+		eng->textures[i++] = NULL;
+	eng->cubes = NULL;
+	
+	register_cube(
+		eng, NULL, CUB_VOID);
+	register_cube(
+		eng, NULL, CUB_AIR);
 }

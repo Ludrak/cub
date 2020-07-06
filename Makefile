@@ -13,24 +13,39 @@ NAME	= $(TARGET_EXE)
 ## SRCS
 SRC_DIR= srcs
 
-SRCS=	main.c			\
-		process.c		\
-		map/map_utils.c		\
-		graphics/graphics.c		\
-		graphics/color_utils.c	\
-		map/map_parser.c	\
-		graphics/raycast.c		\
+SRCS=	main.c						\
+		process.c					\
+		map/map_utils.c				\
+		graphics/graphics.c			\
+		graphics/color_utils.c		\
+		map/map_checker.c			\
+		graphics/raycast.c			\
 		graphics/raycast_utils.c	\
-		util/math_utils.c	\
-		input/input.c			\
-		input/input_handler.c	\
+		util/math_utils.c			\
+		input/input.c				\
+		input/input_handler.c		\
 		gameobjects/cube.c			\
 		gameobjects/sprite.c		\
 		gameobjects/sprite_utils.c	\
 		gameobjects/camera.c		\
 		gameobjects/player.c		\
-		util/register_handler.c	\
-		util/image_loader.c
+		util/register_handler.c		\
+		util/image_loader.c			\
+		util/unloader_handler.c		\
+		parser/parser_map.c			\
+		parser/parser_register.c	\
+		parser/checker.c			\
+		animator/animator.c
+
+## HEADER FILES
+HEADER_FILES =	engine.h		\
+				graphics.h		\
+				map_parser.h	\
+				map_utils.h		\
+				parser.h		\
+				process.h		\
+				raycast.h		\
+				sprite.h
 
 ## HEADERS
 HEADERS = inc/
@@ -67,7 +82,7 @@ endif
 CC			= gcc -c
 GCC			= gcc
 OUT			= --output
-CFLAGS		= -Werror -Wextra -Wall
+CFLAGS		= -Werror -Wextra -Wall -g3# -fsanitize=address
 
 ##
 ##			---- COLORS ----
@@ -151,7 +166,7 @@ $(BIN_DIR) :
 
 ## Require a C source
 ## -> Compiles a c source to a bin o file
-$(BIN_DIR)/%.o : $(SRC_DIR)/%.c
+$(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER_FILES:%=$(HEADERS)/%)
 	@printf$D "\r$(BWHITE)[$(BGREEN)✔️$(BWHITE)] Compiled : $(BGREEN)$<$(WHITE)\n"
 	@mkdir -p $(shell dirname $@)
 	@$(CC) $(OUT) $@ $(LIB_HEADER:%=-I$(LIB)/%) $(HEADERS:%=-I%) -I/usr/include $< $(CFLAGS)

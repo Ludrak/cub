@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/06/29 16:10:57 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/06 17:15:42 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,57 +17,42 @@
 void	awake(t_engine *eng)
 {
 	eng->ptr = mlx_init();
-	if (!loadImages(eng))
+	if (!load_images(eng))
 		p_exit(eng, "Error while loading images.", STATUS_IMG_FAILED);
-	register_cubes(eng);
-	register_sprites(eng);
-	/// !!!! PARSE MAP
-	add_sprite(eng, 0, create_vector(2.5F, 2.5F), 0.5F);
-	add_sprite(eng, 0, create_vector(2.5F, 3.5F), 0.5F);
+	eng->sprites = NULL;
+	eng->loaded_sprites = NULL;
+	eng->animations = NULL;
+	register_builtins(eng);
 }
 
 void	setup(t_engine *engine)
 {
-	t_map		*map;
-	int			map_fd;
-
-	create_window(engine, 1280, 720, __PROJECT_NAME);
-	init_camera(engine->win, &engine->camera, 80.0F);
-	engine->player = create_player(create_vector(0, 0), 0, 6.0F);
-	if ((map_fd = open("res/maps/map.cub", O_RDONLY)) > 0)
-	{
-		map = parse_map(map_fd, engine);
-		engine->map = *map;
-		printf("[MAP] Checking map bounds...\n");
-		if (!check_map(engine->map) || (!engine->player.pos.x &&
-			!engine->player.pos.y))
-		{
-			printf("[MAP] Error : INVALID MAP FORMAT\n");
-			p_exit(engine, "Invalid map format.", STATUS_MAP_FAILED);
-		}
-		else
-			printf("[MAP] Valid map format.\n");
-		close(map_fd);
-	}
+	parse_registry(engine, "res/maps/map.cmap");
+	if (!check_map(engine->map))
+		p_exit (engine, "Invalid map.", STATUS_MAP_FAILED);
+	/*t_anim *anim = create_animation(engine, 20.0F);
+	add_animation_frame(anim, (t_image *)engine->loaded_textures->content);
+	add_animation_frame(anim, (t_image *)engine->loaded_textures->next->content);
+	add_animation_frame(anim, (t_image *)engine->loaded_textures->next->next->content);
+	set_anim_ptr(anim, (t_image **)&((t_cube *)(engine->cubes->content))->tex);*/
 	set_hooks(engine);
 }
 
 int		runtime(t_engine *engine)
 {
-	if (engine->keys.escape.pressed)
-		p_exit(engine, "Escape key pressed", STATUS_SUCCESS);
 	engine->buf.img_ptr = mlx_new_image(engine->ptr,
 		engine->buf.size.x, engine->buf.size.y);
 	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr,
-		&engine->buf.bpp, &engine->buf.size_l, &engine->buf.endian);
+		&engine->buf.bpp, &engine->buf.sl, &engine->buf.endian);
 	handle_input(engine);
-	engine->camera.l_angle = engine->player.rot -
-		radians(engine->camera.fov) / 2.0F;
-	engine->camera.r_angle = engine->player.rot +
-		radians(engine->camera.fov) / 2.0F;
+	engine->cam.l_angle = engine->player.rot -
+		rad(engine->cam.fov) / 2.0F;
+	engine->cam.r_angle = engine->player.rot +
+		rad(engine->cam.fov) / 2.0F;
 	cast_to_frame_buffer(&engine->buf, engine);
 	render_sprite(*engine, &engine->buf);
-	draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
+	if (engine->keys.show_map.pressed && engine->format == CUSTOM_F)
+		draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
 	mlx_put_image_to_window(engine->ptr, engine->win.ptr,
 		engine->buf.img_ptr, 0, 0);
 	mlx_destroy_image(engine->ptr, engine->buf.img_ptr);
@@ -76,20 +61,20 @@ int		runtime(t_engine *engine)
 
 void	p_exit(t_engine *engine, char *info_log, int status)
 {
-	t_list *free_tmp;
-
 	printf("[EXIT]<REQUEST> : %s\n[EXIT] Clearing data...\n", info_log);
-	if (status != STATUS_IMG_FAILED)
+	if (engine->allocs & CREATED_WIN)
 		mlx_destroy_window(engine->ptr, engine->win.ptr);
-	destroy_camera(&engine->camera);
-	while (engine->cubes->next && status != STATUS_IMG_FAILED)
-	{
-		free_tmp = engine->cubes->next;
-		free(engine->cubes->content);
-		free(engine->cubes);
-		engine->cubes = free_tmp;
-	}
+	if (engine->allocs & CREATED_CAM)
+		destroy_camera(&engine->cam);
+	unload_textures(engine);
+	if (engine->allocs & CREATED_CUBES)
+		unload_cubes(engine);
+	if (engine->allocs & CREATED_SPRITE)
+		unload_sprites(engine);
+	if (engine->allocs & CREATED_MAP)
+		unload_map(engine);
+	print_exit_status(status);
+	free(engine->ptr);
 	free(engine);
-	printf("[EXIT] Done.");
 	exit(0);
 }

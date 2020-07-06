@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:32 by lrobino           #+#    #+#             */
-/*   Updated: 2020/06/29 20:57:24 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/06 15:06:31 by lrobino          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define CUB_BLOCK_TORCH    2
 # define CUB_BLOCK_CRACKED  3
 
-t_map       *create_map(unsigned int size_x, unsigned int size_y);
+t_map       create_map(unsigned int size_x, unsigned int size_y, t_engine *eng);
 void        destroy_map(t_map *map);
 
 
