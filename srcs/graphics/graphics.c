@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graphics.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/10 11:26:17 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/03 14:29:28 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:25:22 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ static void	draw_floor(t_engine *eng, int x, int y, t_cast cast)
 
 	dir.y = eng->player.rot + PI + (ft_map(x, vec2f(0, eng->buf.size.x),
 		vec2f(-rad(eng->cam.fov) / 2, rad(eng->cam.fov) / 2)));
-	dir.x = cos(dir.y);
-	dir.y = sin(dir.y);
+	dir = vec2d(cos(dir.y), sin(dir.y));
 	r_pos = eng->player.pos;
 	while (y < eng->buf.size.y - 1)
 	{
@@ -55,12 +54,14 @@ static void	draw_floor(t_engine *eng, int x, int y, t_cast cast)
 			create_vectorf(-0.5f, 0.5f))) * cast.scale_f;
 		cast_v = create_vector(dir.x * ((1.0F - eng->cam.height) / dir_z)
 			+ r_pos.x, dir.y * ((1.0F - eng->cam.height) / dir_z) + r_pos.y);
-		t.x = (int)((cast_v.x - floor(cast_v.x)) * (cast.tex->size.x));
-		t.y = (int)((cast_v.y - floor(cast_v.y)) * (cast.tex->size.y));
-		eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->cub_tex_floor->data
-			[(int)(cast.tex->size.x * t.x + t.y)];
+		t.x = (int)((cast_v.x - floor(cast_v.x)) * (eng->tex_floor->size.x));
+		t.y = (int)((cast_v.y - floor(cast_v.y)) * (eng->tex_floor->size.y));
+		eng->buf.data[x + (y * (int)eng->buf.size.x)] = eng->tex_floor->data
+			[(int)(eng->tex_floor->size.x * t.x + t.y)];
+		t.x = (int)((cast_v.x - floor(cast_v.x)) * (eng->tex_ceil->size.x));
+		t.y = (int)((cast_v.y - floor(cast_v.y)) * (eng->tex_ceil->size.y));
 		eng->buf.data[x + ((eng->buf.size.y - y++) * (int)eng->buf.size.x)] =
-			eng->cub_tex_ceil->data[(int)(cast.tex->size.x * t.x + t.y)];
+		eng->tex_ceil->data[(int)(eng->tex_ceil->size.x * t.x + t.y)];
 	}
 }
 

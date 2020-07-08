@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_map.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/01 22:52:13 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 15:06:17 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/07 20:03:55 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void     parse_xline(t_engine *eng, int y, char *line)
             if (eng->allocs & CREATED_PLAYER)
                 p_exit (eng, "Error 2 player spawns on map, aborting.", STATUS_MAP_FAILED);
             eng->map.map[x][y] = get_cube_by_id(eng, CUB_AIR);
+            eng->allocs |= CREATED_PLAYER;
             create_player(eng, vec2d(x + 0.5F, y + 0.5F), parse_direction (*line), PLAYER_SPEED);
         }
         else if (eng->format == CUSTOM_F && get_sprite_by_id(eng, *line - 'A'))
@@ -97,6 +98,7 @@ int     parse_map(t_engine *eng, t_list *lines)
             break;
     size = get_map_size(lines);
     eng->map = create_map(size.y, size.x, eng);
+    eng->player = create_player(eng, vec2d(0, 0), 0, 0);
     while (lines)
     {
         x_line = lines->content;
@@ -104,6 +106,8 @@ int     parse_map(t_engine *eng, t_list *lines)
         lines = lines->next;
         y++;
     }
+    if (eng->player.pos.x == 0 && eng->player.pos.y == 0)
+        p_exit(eng, "No player on map. aborting.", STATUS_MAP_FAILED);
     ft_lstclear(&first, free);
     return (1);
 }

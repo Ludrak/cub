@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sprite.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/14 21:53:05 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 14:29:05 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:08:17 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,12 @@ void		render_sprite(t_engine eng, t_image *buf)
 	}
 }
 
-void	unload_sprite(t_list *sprite)
+void		unload_sprite(t_list *sprite)
 {
 	t_sprite	*s;
 
 	s = sprite->content;
-	printf ("[UNLOADER] : Unloading sprite with id : %d\n",s->id);
+	printf("[UNLOADER] : Unloading sprite with id : %d\n", s->id);
 	free(s);
 	free(sprite);
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/17 13:19:30 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/06 14:08:30 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 03:17:10 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int				key_pressed_event(int key, void *engine_ptr)
 		engine->keys.escape.pressed = 1;
 	if (key == engine->keys.show_map.value)
 		engine->keys.show_map.pressed = 1;
+	if (key == engine->keys.take_screenshot.value)
+		engine->keys.take_screenshot.pressed = 1;
 	return (key);
 }
 
@@ -50,6 +52,8 @@ int				key_released_event(int key, void *engine_ptr)
 		engine->keys.escape.pressed = 0;
 	if (key == engine->keys.show_map.value)
 		engine->keys.show_map.pressed = 0;
+	if (key == engine->keys.take_screenshot.value)
+		engine->keys.take_screenshot.pressed = 0;
 	return (key);
 }
 
@@ -63,11 +67,13 @@ t_control_keys	set_key_values(void)
 	keys.right.value = XK_Right;
 	keys.escape.value = XK_Escape;
 	keys.show_map.value = XK_m;
+	keys.take_screenshot.value = XK_s;
 	keys.up.pressed = 0;
 	keys.down.pressed = 0;
 	keys.left.pressed = 0;
 	keys.right.pressed = 0;
 	keys.escape.pressed = 0;
 	keys.show_map.pressed = 0;
+	keys.take_screenshot.pressed = 0;
 	return (keys);
 }

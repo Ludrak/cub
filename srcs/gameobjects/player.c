@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 14:25:57 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/03 18:59:58 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:07:43 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ t_player	create_player(t_engine *eng, t_vec2d pos, float rot, float speed)
 	eng->player.rot = rot;
 	eng->player.rotZ = 0;
 	eng->player.speed = speed;
-	eng->allocs |= CREATED_PLAYER;
 	return (eng->player);
 }
 
@@ -27,11 +26,11 @@ void		move_player(t_player *player, int dir, t_map map)
 {
 	player->vel.x = (cos(player->rot) * player->speed * 0.01f) * dir;
 	player->vel.y = (sin(player->rot) * player->speed * 0.01f) * dir;
-
-	if (map.map[(int)(player->pos.x + player->vel.x + 0.24f * ft_sign(player->vel.x))][(int)(player->pos.y)]->id == CUB_AIR)
+	if (map.map[(int)(player->pos.x + 0.2F * ft_sign(player->vel.x))]
+		[(int)(player->pos.y)]->id == CUB_AIR)
 		player->pos.x += player->vel.x;
-
-	if (map.map[(int)(player->pos.x)][(int)(player->pos.y + player->vel.y + 0.24f * ft_sign(player->vel.y))]->id == CUB_AIR)
+	if (map.map[(int)(player->pos.x)]
+	[(int)(player->pos.y + 0.2F * ft_sign(player->vel.y))]->id == CUB_AIR)
 		player->pos.y += player->vel.y;
 }
 

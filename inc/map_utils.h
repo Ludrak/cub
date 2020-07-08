@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:32 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 15:06:31 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:45:40 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void        destroy_map(t_map *map);
 
 
 //UTIL
-void        print_map(t_map map);
 void        draw_minimap(t_image *buffer, t_engine engine, t_vec2f pos);
 int		    is_on_map(t_map map, float x, float y);
 

@@ -32,10 +32,11 @@ SRCS=	main.c						\
 		util/register_handler.c		\
 		util/image_loader.c			\
 		util/unloader_handler.c		\
+		util/screenshot_handler.c	\
 		parser/parser_map.c			\
 		parser/parser_register.c	\
 		parser/checker.c			\
-		animator/animator.c
+		bmp_parser/parse_bmp.c
 
 ## HEADER FILES
 HEADER_FILES =	engine.h		\
@@ -82,7 +83,7 @@ endif
 CC			= gcc -c
 GCC			= gcc
 OUT			= --output
-CFLAGS		= -Werror -Wextra -Wall -g3# -fsanitize=address
+CFLAGS		= -Werror -Wextra -Wall -g3 -fsanitize=address
 
 ##
 ##			---- COLORS ----

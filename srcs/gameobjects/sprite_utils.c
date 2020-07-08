@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sprite_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 13:23:48 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 14:22:46 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:09:25 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int			register_sprite(t_engine *eng, char *tex_file, int sprite_id)
 	else
 		ft_lstadd_back(&eng->loaded_sprites, ft_lstnew(sprite));
 	eng->allocs |= CREATED_SPRITE;
-	printf ("[REGISTER] : Registered sprite id %d with texture : %s\n", sprite_id, tex_file);
+	printf("[REGISTER] : Registered sprite id %d with texture : %s\n",
+		sprite_id, tex_file);
 	return (1);
 }
 
@@ -62,7 +63,7 @@ int			add_sprite(t_engine *eng, int sprite_id, t_vec2d pos, float size)
 		p_exit(eng, "Trying to add unregistered sprite to map.",
 			STATUS_MAP_FAILED);
 	if (!(sprite = malloc(sizeof(t_sprite))))
-		p_exit(eng, "Malloc break on sprite. (try restarting)", STATUS_MAP_FAILED);
+		p_exit(eng, "Malloc break. (try restarting)", STATUS_MAP_FAILED);
 	sprite->id = loaded->id;
 	sprite->sprite = loaded->sprite;
 	sprite->size = size;
@@ -87,11 +88,12 @@ t_spt_info	create_spt_info(t_engine eng, t_sprite tmp)
 	if (eng.cam.l_angle < 0 && info.spt_angle > PI)
 		info.spt_angle -= TWO_PI;
 	info.spt_size = (tmp.size * eng.win.size_y) / tmp.dist;
-	info.spt_height = (int)((1 - tmp.height - 0.5F) * (eng.win.size_y) / tmp.dist);
+	info.spt_height = (int)((1 - tmp.height - 0.5F) *
+		(eng.win.size_y) / tmp.dist);
 	return (info);
 }
 
-int		sprite_cmp(void *a, void *b)
+int			sprite_cmp(void *a, void *b)
 {
 	t_sprite	*sp_a;
 	t_sprite	*sp_b;

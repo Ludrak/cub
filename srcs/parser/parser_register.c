@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_register.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/01 17:32:21 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 15:10:06 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:11:11 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ static int     parse_line_custom (t_engine *eng, char *line)
     else if (ft_strstartswith(line, "SPRITE") && (status = check_id_register(argv)))
         register_sprite(eng, argv[1], ft_atoi(argv[2]));
     else if (ft_strstartswith(line, "CEIL") && (status = check_path(argv)))
-        load_from_xpm(argv[1], &eng->cub_tex_ceil, eng);
+        load_from_xpm(argv[1], &eng->tex_ceil, eng);
     else if (ft_strstartswith(line, "FLOOR") && (status = check_path(argv)))
-        load_from_xpm(argv[1], &eng->cub_tex_floor, eng);
+        load_from_xpm(argv[1], &eng->tex_floor, eng);
     i = 0;
     while (argv[i] != NULL)
         free(argv[i++]);

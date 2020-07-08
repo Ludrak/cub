@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 22:41:41 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 14:22:05 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:06:53 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int		register_cube(t_engine *eng, char *tex_file, short id)
 		eng->cubes = ft_lstnew(cube);
 	else
 		ft_lstadd_back(&eng->cubes, ft_lstnew(cube));
-	printf ("[REGISTER] : Registered cub id %d with texture : %s\n", id, tex_file);
+	printf("[REGISTER] : Registered cub id %d with texture : %s\n",
+		id, tex_file);
 	eng->allocs |= CREATED_CUBES;
 	return (1);
 }
@@ -46,7 +47,7 @@ int		register_cube_format(t_engine *eng, short id)
 	while (i++ < 4)
 	{
 		if (!eng->textures[i - 1])
-			p_exit (eng, "Unassigned all wall textures", STATUS_MAP_FAILED);
+			p_exit(eng, "Unassigned all wall textures", STATUS_MAP_FAILED);
 		cube->tex[i] = eng->textures[i - 1];
 	}
 	cube->id = id;
@@ -54,7 +55,7 @@ int		register_cube_format(t_engine *eng, short id)
 		eng->cubes = ft_lstnew(cube);
 	else
 		ft_lstadd_back(&eng->cubes, ft_lstnew(cube));
-	printf ("[REGISTER] Registered basic cub with id : %d\n", id);
+	printf("[REGISTER] Registered basic cub with id : %d\n", id);
 	eng->allocs |= CREATED_CUBES;
 	return (1);
 }
@@ -80,7 +81,7 @@ void	unload_cube(t_list *cube)
 	t_cube	*c;
 
 	c = cube->content;
-	printf ("[UNLOADER] : Unloading cube with id : %d\n",c->id);
+	printf("[UNLOADER] : Unloading cube with id : %d\n", c->id);
 	free(c);
 	free(cube);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/01 22:19:20 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/05 17:56:04 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 17:08:42 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int		check_id_register(char **argv)
 {
-	int ac;
-	
+	int	ac;
+
 	ac = 0;
 	while (argv[++ac] != NULL)
 		;
@@ -29,10 +29,10 @@ int		check_id_register(char **argv)
 	return (1);
 }
 
-int     check_resolution(char **argv)
+int		check_resolution(char **argv)
 {
-	int ac;
-	
+	int	ac;
+
 	ac = 0;
 	while (argv[++ac] != NULL)
 		;
@@ -46,10 +46,10 @@ int     check_resolution(char **argv)
 	return (1);
 }
 
-int     check_path(char **argv)
+int		check_path(char **argv)
 {
-	int ac;
-	
+	int	ac;
+
 	ac = 0;
 	while (argv[++ac] != NULL)
 		;
@@ -58,9 +58,9 @@ int     check_path(char **argv)
 	return (0);
 }
 
-int check_color(char **argv)
+int		check_color(char **argv)
 {
-	int     ac;
+	int	ac;
 
 	ac = 0;
 	while (argv[++ac] != NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/05 19:50:07 by lrobino          ###   ########lyon.fr   */
+/*   Updated: 2020/07/08 16:33:06 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_cast			perform_raycast
 	{
 		if (map.map[(int)g_pos.x][(int)g_pos.y]->id != CUB_AIR)
 			return (create_cast_info(map.map[(int)g_pos.x][(int)g_pos.y],
-			pos, create_vector(pos.x - (int)pos.x, pos.y - (int)pos.y)));
+			pos, create_vector(r_pos.x, r_pos.y)));
 		cast = get_sqinter(r_pos, dir);
 		real = create_vector(g_pos.x + cast.x, g_pos.y + cast.y);
 		if (is_on_map(map, real.x, real.y))
@@ -108,7 +108,7 @@ void			cast_to_frame_buffer(t_image *buffer, t_engine *engine)
 		engine->cam.z_buffer[i] = vec_mag(cast.point);
 		cast.wall_h = engine->win.size_y / (cos(a) * engine->cam.z_buffer[i]);
 		cast.scale_f = cos(a);
-		if(cast.cube)
+		if (cast.cube)
 			draw_ray_to_buffer(engine, i, cast);
 		i++;
 		a += angle;

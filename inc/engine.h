@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.le-101.fr>        +#+  +:+       +#+        */
+/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/09 16:44:10 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/06 15:58:42 by lrobino          ###   ########lyon.fr   */
+/*   Created: 2020/07/07 20:01:28 by lrobino           #+#    #+#             */
+/*   Updated: 2020/07/08 16:11:10 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define CREATED_CUBES  16
 # define CREATED_SPRITE 32
 
-# define PLAYER_SPEED   8.0F // 12.0F if custom
+# define PLAYER_SPEED   10.0F // 12.0F if custom
 # define ROTATION_SPEED 0.08F; // 0.12F if custom
 
 
@@ -123,6 +123,7 @@ typedef struct	s_control_keys
 	t_key		right;
     t_key       escape;
     t_key       show_map;
+    t_key       take_screenshot;
 }				t_control_keys;
 
 
@@ -163,20 +164,12 @@ typedef struct  s_engine
 
     t_color         floor_col;
     t_color         ceil_col;
-    t_image         *cub_tex_floor;
-    t_image         *cub_tex_ceil;
+    t_image         *tex_floor;
+    t_image         *tex_ceil;
     t_image         *textures[4]; // TEXTURES OF WALLS, ONLY USED WHEN FORMAT
     t_list          *loaded_textures;
     t_list          *animations;
 }               t_engine;
-
-typedef struct  s_anim
-{
-    t_image     **anim_ptr;
-    t_list      *frames;
-    float       latency;
-    float       curr_lat;
-}               t_anim;
 
 
 # include "map_utils.h"
@@ -253,10 +246,10 @@ int             key_released_event(int key, void *engine_ptr);
 int             key_pressed_event(int key, void *engine_ptr);
 
 /*
-**  ANIMATOR
+**  BMP UTILS
 */
-t_anim      *create_animation(t_engine *eng, float latency);
-void        set_anim_ptr(t_anim *anim, t_image **tex_ptr);
-void        add_animation_frame(t_anim *anim, t_image *frame);
+int			export_frame(t_engine *eng, char *name);
+void        take_screenshot(t_engine *eng);
+
 
 #endif
