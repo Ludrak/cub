@@ -6,11 +6,12 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 18:38:46 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 17:00:57 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:27:10 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "graphics.h"
+#include "engine.h"
+#include "process.h"
 
 int			load_from_xpm(char *xpm, t_image **img, t_engine *engine)
 {

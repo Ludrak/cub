@@ -6,11 +6,11 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/08 16:33:06 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:27:27 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycast.h"
+#include "engine.h"
 
 t_vec2d			get_sqinter(t_vec2d pos, t_vec2d dir)
 {
@@ -76,12 +76,12 @@ t_cast			perform_raycast
 		g_pos.y -= 1.0f;
 	if (is_on_map(map, g_pos.x, g_pos.y))
 	{
-		if (map.map[(int)g_pos.x][(int)g_pos.y]->id != CUB_AIR)
-			return (create_cast_info(map.map[(int)g_pos.x][(int)g_pos.y],
-			pos, create_vector(r_pos.x, r_pos.y)));
 		cast = get_sqinter(r_pos, dir);
 		real = create_vector(g_pos.x + cast.x, g_pos.y + cast.y);
-		if (is_on_map(map, real.x, real.y))
+		if (map.map[(int)g_pos.x][(int)g_pos.y]->id != CUB_AIR)
+			return (create_cast_info(map.map[(int)g_pos.x][(int)g_pos.y],
+			pos, create_vector(pos.x - (int)pos.x, pos.y - (int)pos.y)));
+		else if (is_on_map(map, real.x, real.y))
 			return (do_next_cast(eng, (t_vec2d[3]){real, cast, dir}, map));
 	}
 	return (create_cast_info(NULL, create_vector(0, 0), create_vector(0, 0)));

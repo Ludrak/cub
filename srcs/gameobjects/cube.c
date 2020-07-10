@@ -6,11 +6,12 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 22:41:41 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 16:06:53 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:28:49 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
+#include "process.h"
 
 int		register_cube(t_engine *eng, char *tex_file, short id)
 {

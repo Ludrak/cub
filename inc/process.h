@@ -6,17 +6,15 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:51:19 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/07 20:01:46 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:39:29 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PROCESS_H
 # define PROCESS_H
 
-//OVERRIDE THIS IN PROCESS.C
-#include "engine.h"
+# include "engine.h"
 
-//EXIT STATUS
 # define STATUS_REGISTER_FAILED -4
 # define STATUS_WIN_FAILED      -3
 # define STATUS_IMG_FAILED      -2
@@ -24,16 +22,9 @@
 # define STATUS_SUCCESS         0
 # define STATUS_WINDOW_CLOSED   1
 
-//  First execution
-void    awake(t_engine *);
-
-//  Executed right before awake
-void    setup(t_engine *);
-
-//  Executed at each frame
-int    runtime(t_engine *);
-
-//  Executed on exit
-void    p_exit(t_engine *, char *exit_log, int exit_status);
+void	awake(t_engine *eng);
+void	setup(t_engine *eng);
+int		runtime(t_engine *eng);
+void	p_exit(t_engine *eng, char *exit_log, int exit_status);
 
 #endif

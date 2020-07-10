@@ -6,10 +6,11 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 19:06:09 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 16:58:08 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:31:13 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "process.h"
 #include "engine.h"
 
 t_map	create_map(unsigned int size_x, unsigned int size_y, t_engine *eng)
@@ -49,20 +50,20 @@ void	draw_minimap(t_image *buffer, t_engine engine, t_vec2f pos)
 		i = -1;
 		while (++i < engine.map.size_y)
 		{
-			color.value = 0x202023;
+			color.value = 0x202035;
 			if (engine.map.map[i][j]->id == CUB_AIR)
-				color.value = 0xe3e3e8;
+				color.value = 0xd3d3e8;
 			else if (engine.map.map[i][j]->id != CUB_VOID)
-				color.value = 0x4c4c4c;
-			c_pos.x = pos.x + i * (21);
-			c_pos.y = pos.y + j * (21);
+				color.value = 0x4c4c50;
+			c_pos.x = pos.x + i * (20);
+			c_pos.y = pos.y + j * (20);
 			draw_rect_to_buffer(buffer, c_pos, create_vectorf(20, 20), color);
 		}
 	}
 	draw_rect_to_buffer(buffer,
-	create_vectorf((int)(engine.player.pos.x * 20.0F - 5 + engine.player.pos.x),
-	(int)(engine.player.pos.y * 20.0F - 5 + engine.player.pos.y)),
-	create_vectorf(10, 10), create_color(255, 0, 0));
+	create_vectorf((int)(engine.player.pos.x * 20.0F - 5),
+	(int)(engine.player.pos.y * 20.0F - 5)),
+	create_vectorf(10, 10), create_color(20, 200, 255));
 }
 
 int		is_on_map(t_map map, float x, float y)

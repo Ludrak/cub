@@ -6,11 +6,12 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 13:23:48 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 16:09:25 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:29:17 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sprite.h"
+#include "engine.h"
+#include "process.h"
 
 /*
 **  REGISTER A SPRITE TO THE GAME THAT CAN BE LOADED LATER USING
@@ -69,6 +70,7 @@ int			add_sprite(t_engine *eng, int sprite_id, t_vec2d pos, float size)
 	sprite->size = size;
 	sprite->pos = pos;
 	sprite->height = 0.5F;
+	eng->map.map[(int)pos.x][(int)pos.y] = get_cube_by_id(eng, CUB_AIR);
 	if (!eng->sprites)
 		eng->sprites = ft_lstnew(sprite);
 	else

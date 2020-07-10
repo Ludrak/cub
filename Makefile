@@ -46,7 +46,8 @@ HEADER_FILES =	engine.h		\
 				parser.h		\
 				process.h		\
 				raycast.h		\
-				sprite.h
+				sprite.h		\
+				cube.h		\
 
 ## HEADERS
 HEADERS = inc/
@@ -83,7 +84,7 @@ endif
 CC			= gcc -c
 GCC			= gcc
 OUT			= --output
-CFLAGS		= -Werror -Wextra -Wall -g3 -fsanitize=address
+CFLAGS		= -Werror -Wextra -Wall #-g3 -fsanitize=address
 
 ##
 ##			---- COLORS ----

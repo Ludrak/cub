@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 17:06:59 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 17:56:26 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ void	awake(t_engine *eng)
 	eng->sprites = NULL;
 	eng->loaded_sprites = NULL;
 	eng->animations = NULL;
+	eng->format = 0;
 	register_builtins(eng);
 }
 
 void	setup(t_engine *engine)
 {
-	parse_registry(engine, "res/maps/map.cmap");
+	parse_registry(engine, "res/maps/subject-map.cub");
 	if (!check_map(engine->map))
 		p_exit(engine, "Invalid map.", STATUS_MAP_FAILED);
 	set_hooks(engine);
@@ -40,6 +41,7 @@ int		runtime(t_engine *engine)
 	engine->buf.data = (int *)mlx_get_data_addr(engine->buf.img_ptr,
 		&engine->buf.bpp, &engine->buf.sl, &engine->buf.endian);
 	handle_input(engine);
+	update_player(&engine->player, engine->map);
 	engine->cam.l_angle = engine->player.rot -
 		rad(engine->cam.fov) / 2.0F;
 	engine->cam.r_angle = engine->player.rot +
