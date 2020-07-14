@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 16:33:37 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:34:16 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 02:16:46 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "vectors.h"
 # include "color.h"
 
-# define TEX_NORTH  2
-# define TEX_SOUTH  3
+# define TEX_NORTH  3
+# define TEX_SOUTH  2
 # define TEX_EAST   1
 # define TEX_WEST   0
 

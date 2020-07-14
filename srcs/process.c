@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 17:56:26 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:31:11 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	awake(t_engine *eng)
 
 void	setup(t_engine *engine)
 {
-	parse_registry(engine, "res/maps/subject-map.cub");
+	parse_registry(engine, engine->map_file);
 	if (!check_map(engine->map))
 		p_exit(engine, "Invalid map.", STATUS_MAP_FAILED);
 	set_hooks(engine);
@@ -48,7 +48,7 @@ int		runtime(t_engine *engine)
 		rad(engine->cam.fov) / 2.0F;
 	cast_to_frame_buffer(&engine->buf, engine);
 	render_sprite(*engine, &engine->buf);
-	if (engine->keys.take_screenshot.pressed)
+	if (engine->keys.take_screenshot.pressed || engine->first_screen)
 		take_screenshot(engine);
 	if (engine->keys.show_map.pressed && engine->format == CUSTOM_F)
 		draw_minimap(&engine->buf, *engine, create_vectorf(0, 0));
@@ -61,11 +61,13 @@ int		runtime(t_engine *engine)
 
 void	p_exit(t_engine *engine, char *info_log, int status)
 {
-	printf("[EXIT]<REQUEST> : %s\n[EXIT] Clearing data...\n", info_log);
+	if (status != STATUS_SUCCESS && status != STATUS_WINDOW_CLOSED)
+		ft_printf("Error\n");
+	ft_printf("[EXIT]: %s\n[EXIT] Clearing data...\n", info_log);
 	unload_textures(engine);
 	if (engine->allocs & CREATED_WIN)
 	{
-		printf("[MLX] Destroying window data.\n");
+		ft_printf("[MLX] Destroying window data.\n");
 		mlx_destroy_window(engine->ptr, engine->win.ptr);
 	}
 	if (engine->allocs & CREATED_CAM)

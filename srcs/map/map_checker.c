@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 16:35:07 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 16:41:34 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:32:58 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@ static int	check_horizontal(t_map map)
 			current = last;
 			last = map.map[y][x]->id;
 			if (current + last == CUB_VOID)
-			{
-				printf("x: %d, y: %d\n", x, y);
 				return (1);
-			}
 			y++;
 		}
 		x++;
@@ -58,10 +55,7 @@ static int	check_vertical(t_map map)
 			current = last;
 			last = map.map[y][x]->id;
 			if (current + last == CUB_VOID)
-			{
-				printf("x: %d, y: %d\n", x, y);
 				return (1);
-			}
 			x++;
 		}
 		y++;

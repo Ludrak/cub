@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 14:25:57 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:29:33 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:15:33 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ t_player	create_player(t_engine *eng, t_vec2d pos, float rot, float speed)
 	return (eng->player);
 }
 
-void		move_player(t_player *player, int dir)
+void		move_player(t_player *player, int dir, float ld)
 {
-	player->vel.x = (cos(player->rot) * player->speed * 0.01f) * dir;
-	player->vel.y = (sin(player->rot) * player->speed * 0.01f) * dir;
+	player->vel.x = (cos(player->rot + (PI / 2) * ld) *
+		player->speed * 0.01f) * dir;
+	player->vel.y = (sin(player->rot + (PI / 2) * ld) *
+		player->speed * 0.01f) * dir;
 }
 
 void		update_player(t_player *player, t_map map)

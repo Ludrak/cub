@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 16:00:14 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:32:25 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:29:14 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,14 @@
 # include "sprite.h"
 # include "map_parser.h"
 # include "parser.h"
+# include "ft_printf.h"
 
 # define __PROJECT_NAME	"Cub3d - 1.2.0"
 
 # define MAX_VIEW		10
 
 /*
-**  THESE ARE DEPRECATED
+**  THOSE ARE DEPRECATED
 **  DO NOT USE FOR FURTHER
 **  IMPLEMENTATION
 */
@@ -94,6 +95,8 @@ typedef struct	s_control_keys
 	t_key		escape;
 	t_key		show_map;
 	t_key		take_screenshot;
+	t_key		l_cam;
+	t_key		r_cam;
 }				t_control_keys;
 
 typedef struct	s_engine
@@ -117,6 +120,8 @@ typedef struct	s_engine
 	t_image			*textures[4];
 	t_list			*loaded_textures;
 	t_list			*animations;
+	char			*map_file;
+	int				first_screen;
 }				t_engine;
 
 /*
@@ -148,7 +153,7 @@ void			unload_map(t_engine *eng);
 t_player		create_player
 		(t_engine *eng, t_vec2d pos, float rot, float speed);
 void			update_player(t_player *player, t_map map);
-void			move_player(t_player *player, int dir);
+void			move_player(t_player *player, int dir, float ldir);
 void			rotate_player(t_player *player, int dir);
 
 /*

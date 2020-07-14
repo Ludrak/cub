@@ -1,14 +1,16 @@
 R 1920 1080
 
-S ./res/textures/phantom.xpm 
+S ./res/textures/phantom.xpm
 
 C  26, 60, 60
-F  135, 64, 
+F  135, 64, 5
 
-NO ./res/textures/dungeon_wall.xpm
+NO ./res/textures/phantom.xpm
 SO ./res/textures/dungeon_wall.xpm
 EA ./res/textures/dungeon_wall_cracked.xpm
 WE ./res/textures/dungeon_wall_torch.xpm
+
+
 
 
         1111111111111111111111111

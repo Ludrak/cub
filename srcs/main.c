@@ -6,22 +6,34 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:03 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 17:06:20 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:31:26 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 #include "process.h"
 
-int		main(void)
+int		main(int ac, char **av)
 {
 	t_engine	*master;
 
 	if (!(master = malloc(sizeof(t_engine))))
 		return (0);
 	master->allocs = 0;
-	awake(master);
-	setup(master);
+	master->first_screen = 0;
+	if (ac > 1)
+	{
+		master->map_file = av[1];
+		if (ac == 3 && !ft_strcmp(av[1], "--save"))
+		{
+			master->first_screen = 1;
+			master->map_file = av[2];
+		}
+		awake(master);
+		setup(master);
+	}
+	p_exit(master, "Wrong input parameters.", STATUS_INPUT_FAILED);
+	return (0);
 }
 
 void	set_hooks(t_engine *eng)
@@ -42,7 +54,7 @@ int		create_window(t_engine *eng, int size_x, int size_y, char *title)
 
 	if (!mlx_get_screen_size(eng->ptr, &max_x, &max_y))
 		p_exit(eng, "Unable to get max screen size.", STATUS_WIN_FAILED);
-	printf("[MLX] : Creating window\n");
+	ft_printf("[MLX] : Creating window\n");
 	eng->win.size_x = size_x > max_x ? max_x : size_x;
 	eng->win.size_y = size_y > max_y ? max_y : size_y;
 	if (!(eng->win.ptr = mlx_new_window(eng->ptr, eng->win.size_x,
@@ -65,13 +77,13 @@ int		on_window_destroyed(void *engine)
 void	print_exit_status(int status)
 {
 	if (status == STATUS_MAP_FAILED)
-		printf("[EXIT] Exit with status : MAP_FAILED\n");
+		ft_printf("[EXIT] Exit with status : MAP_FAILED\n");
 	else if (status == STATUS_MAP_FAILED)
-		printf("[EXIT] Exit with status : REGISTER_FAILED\n");
+		ft_printf("[EXIT] Exit with status : REGISTER_FAILED\n");
 	else if (status == STATUS_WIN_FAILED)
-		printf("[EXIT] Exited with status : WINDOW_FAILED\n");
+		ft_printf("[EXIT] Exited with status : WINDOW_FAILED\n");
 	else if (status == STATUS_WINDOW_CLOSED)
-		printf("[EXIT] Exited with status : WINDOW_CLOSED\n");
+		ft_printf("[EXIT] Exited with status : WINDOW_CLOSED\n");
 	else if (status == STATUS_SUCCESS)
-		printf("[EXIT] Exit with status : SUCCESS\n");
+		ft_printf("[EXIT] Exit with status : SUCCESS\n");
 }

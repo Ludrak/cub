@@ -4,7 +4,7 @@
 ##		Using exernal or local libs
 
 ## TARGET_TYPE
-TARGET_EXE	= cub.out
+TARGET_EXE	= Cub3D
 TARGET_LIB	= lib.a
 
 ## PROJECT NAME (Choose target)
@@ -47,7 +47,8 @@ HEADER_FILES =	engine.h		\
 				process.h		\
 				raycast.h		\
 				sprite.h		\
-				cube.h		\
+				cube.h			\
+				color.h
 
 ## HEADERS
 HEADERS = inc/
@@ -59,8 +60,8 @@ OBJS	= $(addprefix $(BIN_DIR)/, $(SRCS:.c=.o))
 ## LIBS
 LIB				= lib
 ## Make sure that libft is in $(LIB) and that it outputs libft.a
-LIB_HEADER		= libft/inc libvector libgnl 
-LOCAL_LIB_DIRS	= libft libgnl libvector
+LIB_HEADER		= libft/inc libvector libgnl/inc libprintf/includes
+LOCAL_LIB_DIRS	= libft libgnl libvector libprintf
 ifeq ($(shell uname), Linux)
 	LOCAL_LIB_DIRS += libmlx_Linux
 	LIB_HEADER += libmlx_Linux
@@ -120,9 +121,8 @@ BWHITE=		\033[1;37m
 
 
 ## Require NAME and prints descritpion(42 norm)
-all: desc $(NAME)
-	@echo "Done"
-
+all: desc libs $(TARGET_EXE)
+	@echo "$(BWHITE)[$(BBLUE)$(NAME)$(BWHITE)] \033[0mDone."
 
 
 ## Prints a short description of what is compiling.
@@ -141,10 +141,9 @@ desc :
 ## Require bin dir and objs
 ## Require headers
 ## -> Links the objs with libs.
-#$(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a)
-$(TARGET_EXE) : libs $(BIN_DIR) $(OBJS) $(HEADERS)
-	@echo "$(BGREEN)Linked program $(CYAN)'$(NAME)'$(WHITE)."
-	@$(GCC) $(OUT) $(NAME) $(CFLAGS) $(LOCAL_LIB_DIRS:%=-L$(LIB)/%) $(OBJS) $(LOCAL_LIB_DIRS:lib%=-l%) $(EXERN_LIBS:lib%=-l%) $(FRAMEWORKS)
+$(TARGET_EXE) : $(BIN_DIR) $(OBJS) $(HEADER_FILES:%=$(HEADERS)%)
+	@echo "$(BWHITE)[$(BBLUE)$(NAME)$(BWHITE)] $(BGREEN)Linked program $(CYAN)'$(NAME)'$(WHITE)."
+	@$(GCC) $(OUT) $(TARGET_EXE) $(CFLAGS) $(LOCAL_LIB_DIRS:%=-L$(LIB)/%) $(OBJS) $(LOCAL_LIB_DIRS:lib%=-l%) $(EXERN_LIBS:lib%=-l%) $(FRAMEWORKS)
 
 
 
@@ -154,7 +153,7 @@ $(TARGET_EXE) : libs $(BIN_DIR) $(OBJS) $(HEADERS)
 ## Require headers
 ## -> Links the objs with libs.
 $(TARGET_LIB) : $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a) $(BIN_DIR) $(OBJS) $(HEADERS)
-	@echo "$(BGREEN)Linked library $(CYAN)'$(NAME)'$(WHITE)."
+	@echo "$(BWHITE)[$(BBLUE)$(NAME)$(BWHITE)] $(BGREEN)Linked library $(CYAN)'$(NAME)'$(WHITE)."
 	@ar rcs $(NAME) $(OBJS) $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a)
 
 
@@ -169,7 +168,7 @@ $(BIN_DIR) :
 ## Require a C source
 ## -> Compiles a c source to a bin o file
 $(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER_FILES:%=$(HEADERS)/%)
-	@printf$D "\r$(BWHITE)[$(BGREEN)✔️$(BWHITE)] Compiled : $(BGREEN)$<$(WHITE)\n"
+	@printf$D "$(BWHITE)[$(BBLUE)$(NAME)$(BWHITE)] $(BWHITE)[$(BGREEN)✔️$(BWHITE)] Compiled : $(BGREEN)$<$(WHITE)\n"
 	@mkdir -p $(shell dirname $@)
 	@$(CC) $(OUT) $@ $(LIB_HEADER:%=-I$(LIB)/%) $(HEADERS:%=-I%) -I/usr/include $< $(CFLAGS)
 
@@ -177,14 +176,11 @@ $(BIN_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER_FILES:%=$(HEADERS)/%)
 
 ## Require libs .a (is they exist ?)
 ## -> Makes libs.
-#$(LOCAL_LIB_DIRS:%=$(LIB)/%/%.a) : $(LOCAL_LIB_DIRS:%=$(LIB)/%/)
 libs :
 	@for lib in $(LOCAL_LIB_DIRS) ; do \
 		make -C $(LIB)/$${lib} ; \
 	done
 
- #$(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a) :  $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/)
-#	@make -C $<
 
 
 ## -> Cleans the binarys
@@ -212,3 +208,5 @@ fclean : clean
 
 
 re : clean fclean all
+
+.PHONY : all re clean fclean libs desc

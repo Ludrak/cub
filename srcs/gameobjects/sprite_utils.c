@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 13:23:48 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:29:17 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:33:31 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int			register_sprite(t_engine *eng, char *tex_file, int sprite_id)
 	else
 		ft_lstadd_back(&eng->loaded_sprites, ft_lstnew(sprite));
 	eng->allocs |= CREATED_SPRITE;
-	printf("[REGISTER] : Registered sprite id %d with texture : %s\n",
+	ft_printf("[REGISTER] : Registered sprite id %d with texture : %s\n",
 		sprite_id, tex_file);
 	return (1);
 }

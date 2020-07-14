@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 18:38:46 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:27:10 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:32:08 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int			load_from_xpm(char *xpm, t_image **img, t_engine *engine)
 {
-	printf("[LOADIMAGE] : Loading image : %s\n", xpm);
+	ft_printf("[LOADIMAGE] : Loading image : [%s]\n", xpm);
 	if (!xpm || !img)
 		p_exit(engine, "Undefined path for texture.", STATUS_IMG_FAILED);
 	if (!(*img = malloc(sizeof(t_image))))

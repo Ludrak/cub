@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 22:41:41 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:28:49 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:34:01 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		register_cube(t_engine *eng, char *tex_file, short id)
 		eng->cubes = ft_lstnew(cube);
 	else
 		ft_lstadd_back(&eng->cubes, ft_lstnew(cube));
-	printf("[REGISTER] : Registered cub id %d with texture : %s\n",
+	ft_printf("[REGISTER] : Registered cub id %d with texture : %s\n",
 		id, tex_file);
 	eng->allocs |= CREATED_CUBES;
 	return (1);
@@ -56,7 +56,7 @@ int		register_cube_format(t_engine *eng, short id)
 		eng->cubes = ft_lstnew(cube);
 	else
 		ft_lstadd_back(&eng->cubes, ft_lstnew(cube));
-	printf("[REGISTER] Registered basic cub with id : %d\n", id);
+	ft_printf("[REGISTER] Registered basic cub with id : %d\n", id);
 	eng->allocs |= CREATED_CUBES;
 	return (1);
 }
@@ -82,7 +82,7 @@ void	unload_cube(t_list *cube)
 	t_cube	*c;
 
 	c = cube->content;
-	printf("[UNLOADER] : Unloading cube with id : %d\n", c->id);
+	ft_printf("[UNLOADER] : Unloading cube with id : %d\n", c->id);
 	free(c);
 	free(cube);
 }

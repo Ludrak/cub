@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:51:19 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:39:29 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:29:00 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 # define PROCESS_H
 
 # include "engine.h"
+# include "ft_printf.h"
 
+# define STATUS_INPUT_FAILED	-5
 # define STATUS_REGISTER_FAILED -4
 # define STATUS_WIN_FAILED      -3
 # define STATUS_IMG_FAILED      -2

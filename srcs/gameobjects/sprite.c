@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/14 21:53:05 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/08 16:08:17 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 14:33:44 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void		unload_sprite(t_list *sprite)
 	t_sprite	*s;
 
 	s = sprite->content;
-	printf("[UNLOADER] : Unloading sprite with id : %d\n", s->id);
+	ft_printf("[UNLOADER] : Unloading sprite with id : %d\n", s->id);
 	free(s);
 	free(sprite);
 }

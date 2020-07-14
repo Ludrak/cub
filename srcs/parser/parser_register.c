@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 19:04:02 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 18:17:22 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/10 20:59:03 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static int		parse_line(t_engine *eng, char *line)
 
 	status = 0;
 	av = ft_splitcharset(line, ", \t\v\f\r");
-	for(int i = 0; av[i]; i++)
-		printf (">> [%s]\n", av[i]);
 	if (ft_strncmp(line, "R", 1) == 0 && (status = check_resolution(av))
 	&& create_window(eng, ft_atoi(av[1]), ft_atoi(av[2]), __PROJECT_NAME))
 		init_camera(eng, &eng->cam, 80.0F);

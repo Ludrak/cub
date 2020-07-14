@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/17 13:19:30 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/08 03:17:10 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/11 02:05:22 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ int				key_pressed_event(int key, void *engine_ptr)
 	t_engine	*engine;
 
 	engine = engine_ptr;
+	if (key == engine->keys.l_cam.value)
+		engine->keys.l_cam.pressed = 1;
+	if (key == engine->keys.r_cam.value)
+		engine->keys.r_cam.pressed = 1;
 	if (key == engine->keys.up.value)
 		engine->keys.up.pressed = 1;
 	if (key == engine->keys.down.value)
@@ -40,6 +44,10 @@ int				key_released_event(int key, void *engine_ptr)
 	t_engine	*engine;
 
 	engine = engine_ptr;
+	if (key == engine->keys.l_cam.value)
+		engine->keys.l_cam.pressed = 0;
+	if (key == engine->keys.r_cam.value)
+		engine->keys.r_cam.pressed = 0;
 	if (key == engine->keys.up.value)
 		engine->keys.up.pressed = 0;
 	if (key == engine->keys.down.value)
@@ -61,13 +69,15 @@ t_control_keys	set_key_values(void)
 {
 	t_control_keys	keys;
 
-	keys.up.value = XK_Up;
-	keys.down.value = XK_Down;
-	keys.left.value = XK_Left;
-	keys.right.value = XK_Right;
+	keys.up.value = XK_w;
+	keys.down.value = XK_s;
+	keys.left.value = XK_d;
+	keys.right.value = XK_a;
 	keys.escape.value = XK_Escape;
 	keys.show_map.value = XK_m;
-	keys.take_screenshot.value = XK_s;
+	keys.take_screenshot.value = XK_F2;
+	keys.l_cam.value = XK_Left;
+	keys.r_cam.value = XK_Right;
 	keys.up.pressed = 0;
 	keys.down.pressed = 0;
 	keys.left.pressed = 0;
@@ -75,5 +85,7 @@ t_control_keys	set_key_values(void)
 	keys.escape.pressed = 0;
 	keys.show_map.pressed = 0;
 	keys.take_screenshot.pressed = 0;
+	keys.l_cam.pressed = 0;
+	keys.r_cam.pressed = 0;
 	return (keys);
 }
