@@ -4,11 +4,14 @@
 ##		Using exernal or local libs
 
 ## TARGET_TYPE
-TARGET_EXE	= Cub3D
+TARGET_EXE	= cub3D
 TARGET_LIB	= lib.a
 
 ## PROJECT NAME (Choose target)
 NAME	= $(TARGET_EXE)
+
+## SCREENSHOTS FOLDER
+SCREENSHOTS = ./screenshots
 
 ## SRCS
 SRC_DIR= srcs
@@ -85,7 +88,7 @@ endif
 CC			= gcc -c
 GCC			= gcc
 OUT			= --output
-CFLAGS		= -Werror -Wextra -Wall #-g3 -fsanitize=address
+CFLAGS		= -Werror -Wextra -Wall # -g3 -fsanitize=address
 
 ##
 ##			---- COLORS ----
@@ -121,7 +124,7 @@ BWHITE=		\033[1;37m
 
 
 ## Require NAME and prints descritpion(42 norm)
-all: desc libs $(TARGET_EXE)
+all: desc libs $(SCREENSHOTS) $(TARGET_EXE)
 	@echo "$(BWHITE)[$(BBLUE)$(NAME)$(BWHITE)] \033[0mDone."
 
 
@@ -162,6 +165,13 @@ $(TARGET_LIB) : $(foreach D, $(LOCAL_LIB_DIRS), $(LIB)/$D/$D.a) $(BIN_DIR) $(OBJ
 $(BIN_DIR) :
 	@echo "$(BYELLOW)Warning : no $(BIN_DIR) found.\ncreating one..."
 	@mkdir -p $(BIN_DIR)
+
+
+
+## Makes the screenshots dir
+$(SCREENSHOTS) :
+	@echo "$(BYELLOW)Warning : no $(SCREENSHOTS) found.\ncreating one..."
+	@mkdir -p $(SCREENSHOTS)
 
 
 

@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:04:24 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/11 14:31:53 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/20 12:44:41 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	take_screenshot(t_engine *eng)
 {
 	int		status;
 
-	eng->first_screen = 0;
 	ft_printf("[SCREENSHOT] Taking screenshot...\n");
 	status = export_frame(eng, "image.bmp");
 	if (status == -1)

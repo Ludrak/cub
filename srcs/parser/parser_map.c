@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/09 16:21:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 16:29:51 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/19 00:44:35 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void		parse_xline(t_engine *eng, int y, char *line)
 			create_player(eng, vec2d(x + 0.5F, y + 0.5F),
 			parse_dir(*line), PLAYER_SPEED);
 		else if (eng->format == CUSTOM_F && get_sprite_by_id(eng, *line - 'A'))
-			add_sprite(eng, *line - 'A', vec2d(x + 0.5F, y + 0.5F), 0.75F);
+			add_sprite(eng, *line - 'A', vec2d(x + 0.5F, y + 0.5F), 1.0F);
 		else
 			p_exit(eng, "Unparsable id on map. aborting.", STATUS_MAP_FAILED);
 		x++;

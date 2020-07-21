@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/10 16:27:27 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/21 17:40:47 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,16 +98,16 @@ void			cast_to_frame_buffer(t_image *buffer, t_engine *engine)
 	angle = rad(engine->cam.fov) / (float)buffer->size.x;
 	a = -rad(engine->cam.fov / 2.0F);
 	i = 0;
-	while (a <= rad((engine->cam.fov) / 2.0F)
+	while (a <= rad(engine->cam.fov / 2.0F)
 		&& i < engine->buf.size.x - 1)
 	{
-		r_dir.x = cos(a + engine->player.rot);
-		r_dir.y = sin(a + engine->player.rot);
+		r_dir.x = cosf(engine->player.rot + a);
+		r_dir.y = sinf(engine->player.rot + a);
 		cast = perform_raycast(engine, engine->player.pos, r_dir, engine->map);
 		cast.point = vec_sub(cast.point, engine->player.pos);
 		engine->cam.z_buffer[i] = vec_mag(cast.point);
-		cast.wall_h = engine->win.size_y / (cos(a) * engine->cam.z_buffer[i]);
-		cast.scale_f = cos(a);
+		cast.wall_h = engine->win.size_y / (cosf(a) * engine->cam.z_buffer[i]);
+		cast.scale_f = cosf(a);
 		if (cast.cube)
 			draw_ray_to_buffer(engine, i, cast);
 		i++;

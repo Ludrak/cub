@@ -4,8 +4,8 @@ CUBE ./res/textures/dungeon_wall.xpm            1
 CUBE ./res/textures/dungeon_wall_torch.xpm      2
 CUBE ./res/textures/dungeon_wall_cracked.xpm    3
 
-SPRITE ./res/textures/phantom.xpm               0
-SPRITE ./res/textures/phantom.xpm               1
+SPRITE ./res/textures/wolf-ennemy.xpm                   A
+SPRITE ./res/textures/phantom.xpm               B
 
 
 FLOOR ./res/textures/dungeon_floor.xpm
@@ -18,9 +18,9 @@ CEIL ./res/textures/dungeon_ceil.xpm
 131121311100001
   1211133101311
   1031000001 
-  1012000002 
-  100000A003 
-  1312000001   
+  1012000A02 
+  1000000003 
+  1312000001  
      1111011 
    11112103111
    30000000003

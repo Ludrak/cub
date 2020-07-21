@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:03 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/11 14:31:26 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/21 00:10:58 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,20 @@ int		main(int ac, char **av)
 		return (0);
 	master->allocs = 0;
 	master->first_screen = 0;
-	if (ac > 1)
+	if (ac > 1 && ac <= 3)
 	{
 		master->map_file = av[1];
-		if (ac == 3 && !ft_strcmp(av[1], "--save"))
-		{
+		if (ac == 3 && !ft_strcmp(av[2], "--save"))
 			master->first_screen = 1;
-			master->map_file = av[2];
-		}
+		else if (ac == 3)
+			p_exit(master,
+			"Unknown 2nd argument. \
+Try with ./cub3D <map> --save.", STATUS_WIN_FAILED);
 		awake(master);
 		setup(master);
 	}
+	if (master->first_screen)
+		p_exit(master, "Saved screenshot.", STATUS_SAVED_SCREEN);
 	p_exit(master, "Wrong input parameters.", STATUS_INPUT_FAILED);
 	return (0);
 }
@@ -54,14 +57,17 @@ int		create_window(t_engine *eng, int size_x, int size_y, char *title)
 
 	if (!mlx_get_screen_size(eng->ptr, &max_x, &max_y))
 		p_exit(eng, "Unable to get max screen size.", STATUS_WIN_FAILED);
-	ft_printf("[MLX] : Creating window\n");
 	eng->win.size_x = size_x > max_x ? max_x : size_x;
 	eng->win.size_y = size_y > max_y ? max_y : size_y;
-	if (!(eng->win.ptr = mlx_new_window(eng->ptr, eng->win.size_x,
-		eng->win.size_y, title)))
-		p_exit(eng, "Unable to create window.", STATUS_WIN_FAILED);
+	if (!eng->first_screen)
+	{
+		ft_printf("[MLX] : Creating window\n");
+		if (!(eng->win.ptr = mlx_new_window(eng->ptr, eng->win.size_x,
+			eng->win.size_y, title)))
+			p_exit(eng, "Unable to create window.", STATUS_WIN_FAILED);
+		eng->allocs |= CREATED_WIN;
+	}
 	eng->buf.size = create_vectori(eng->win.size_x, eng->win.size_y);
-	eng->allocs |= CREATED_WIN;
 	return (1);
 }
 

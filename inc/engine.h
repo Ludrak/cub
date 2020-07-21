@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 16:00:14 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/11 14:29:14 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/15 22:50:58 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@
 # define ROTATION_SPEED	0.08F
 
 # define __FRICTION		1.3F
+
+# define ALPHABET		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 typedef struct	s_window
 {

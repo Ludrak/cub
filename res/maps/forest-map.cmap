@@ -1,0 +1,24 @@
+
+
+RESOLUTION 1280 720
+
+CUBE ./res/textures/forest/wall_forest.xpm 1
+
+SPRITE ./res/textures/forest/grass-tall.xpm        A
+SPRITE ./res/textures/forest/grass-small.xpm       B
+SPRITE ./res/textures/forest/rock.xpm              C
+
+CEIL ./res/textures/forest/ceil_forest.xpm
+FLOOR ./res/textures/forest/ground_forest.xpm
+
+111111111111
+1B000A100AC111111111
+100C000000110A000B01
+11111111100100C00A011111111111
+        10010C10B000000000A001
+    11111001111111111111111001
+    10A0000000B0111A1B000B0001
+    10001B000000100B001E010A01
+    11111111111000111111111111
+              11111
+              

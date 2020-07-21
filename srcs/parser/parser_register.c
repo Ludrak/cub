@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 19:04:02 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/10 20:59:03 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/18 17:18:18 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int		parse_line2(t_engine *eng, char *line)
 	ft_strstartswith(line, "CUBE") && (status = check_id_register(argv)))
 		register_cube(eng, argv[1], ft_atoi(argv[2]));
 	else if (
-	ft_strstartswith(line, "SPRITE") && (status = check_id_register(argv)))
-		register_sprite(eng, argv[1], ft_atoi(argv[2]));
+	ft_strstartswith(line, "SPRITE") && (status = check_spt_register(argv)))
+		register_sprite(eng, argv[1], ft_atoi_base(argv[2], ALPHABET));
 	else if (ft_strstartswith(line, "CEIL") && (status = check_path(argv)))
 		load_from_xpm(argv[1], &eng->tex_ceil, eng);
 	else if (ft_strstartswith(line, "FLOOR") && (status = check_path(argv)))

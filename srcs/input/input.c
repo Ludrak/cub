@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/17 13:19:30 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/11 02:05:22 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/17 22:44:33 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int				key_pressed_event(int key, void *engine_ptr)
 	if (key == engine->keys.escape.value)
 		engine->keys.escape.pressed = 1;
 	if (key == engine->keys.show_map.value)
-		engine->keys.show_map.pressed = 1;
+		engine->keys.show_map.pressed =
+		!engine->keys.show_map.pressed;
 	if (key == engine->keys.take_screenshot.value)
 		engine->keys.take_screenshot.pressed = 1;
 	return (key);
@@ -58,8 +59,6 @@ int				key_released_event(int key, void *engine_ptr)
 		engine->keys.right.pressed = 0;
 	if (key == engine->keys.escape.value)
 		engine->keys.escape.pressed = 0;
-	if (key == engine->keys.show_map.value)
-		engine->keys.show_map.pressed = 0;
 	if (key == engine->keys.take_screenshot.value)
 		engine->keys.take_screenshot.pressed = 0;
 	return (key);
