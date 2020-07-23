@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 13:23:48 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/19 00:44:02 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/23 08:14:09 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ int			register_sprite(t_engine *eng, char *tex_file, int sprite_id)
 {
 	t_sprite	*sprite;
 
-	if (!(sprite = malloc(sizeof(t_sprite))))
-		return (0);
+	if (!(sprite = malloc(sizeof(t_sprite))) || (eng->format == FORMAT &&
+	eng->allocs & CREATED_SPRITE))
+		p_exit(eng, "Cannot add more than one sprite.", STATUS_INPUT_FAILED);
 	if (!load_from_xpm(tex_file, &sprite->sprite, eng))
 		p_exit(eng, "Cannot map texture file to sprite", STATUS_IMG_FAILED);
 	sprite->id = sprite_id;

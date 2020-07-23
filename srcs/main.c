@@ -6,12 +6,13 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:44:03 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/21 00:10:58 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/23 06:50:51 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 #include "process.h"
+#include <limits.h>
 
 int		main(int ac, char **av)
 {
@@ -57,6 +58,8 @@ int		create_window(t_engine *eng, int size_x, int size_y, char *title)
 
 	if (!mlx_get_screen_size(eng->ptr, &max_x, &max_y))
 		p_exit(eng, "Unable to get max screen size.", STATUS_WIN_FAILED);
+	if (size_x <= 0 || size_y <= 0 || size_x > INT_MAX || size_y > INT_MAX)
+		p_exit(eng, "Invalid resolution", STATUS_WIN_FAILED);
 	eng->win.size_x = size_x > max_x ? max_x : size_x;
 	eng->win.size_y = size_y > max_y ? max_y : size_y;
 	if (!eng->first_screen)

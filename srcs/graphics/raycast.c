@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/18 15:50:28 by coralie           #+#    #+#             */
-/*   Updated: 2020/07/21 17:40:47 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/22 21:19:13 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,28 +89,27 @@ t_cast			perform_raycast
 
 void			cast_to_frame_buffer(t_image *buffer, t_engine *engine)
 {
-	int		i;
-	float	angle;
+	int		x;
+	float	screen_dist;
 	float	a;
 	t_cast	cast;
 	t_vec2d	r_dir;
 
-	angle = rad(engine->cam.fov) / (float)buffer->size.x;
+	screen_dist = ((buffer->size.x / 2.0F / tan(rad(engine->cam.fov / 2.0F))));
 	a = -rad(engine->cam.fov / 2.0F);
-	i = 0;
-	while (a <= rad(engine->cam.fov / 2.0F)
-		&& i < engine->buf.size.x - 1)
+	x = 0;
+	while (x < engine->buf.size.x - 1)
 	{
 		r_dir.x = cosf(engine->player.rot + a);
 		r_dir.y = sinf(engine->player.rot + a);
 		cast = perform_raycast(engine, engine->player.pos, r_dir, engine->map);
 		cast.point = vec_sub(cast.point, engine->player.pos);
-		engine->cam.z_buffer[i] = vec_mag(cast.point);
-		cast.wall_h = engine->win.size_y / (cosf(a) * engine->cam.z_buffer[i]);
+		engine->cam.z_buffer[x] = vec_mag(cast.point);
+		cast.wall_h = buffer->size.y / (cosf(a) * engine->cam.z_buffer[x]);
 		cast.scale_f = cosf(a);
 		if (cast.cube)
-			draw_ray_to_buffer(engine, i, cast);
-		i++;
-		a += angle;
+			draw_ray_to_buffer(engine, x, cast);
+		x++;
+		a = atan((x - (buffer->size.x / 2.0F)) / screen_dist);
 	}
 }

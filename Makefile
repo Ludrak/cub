@@ -39,6 +39,7 @@ SRCS=	main.c						\
 		parser/parser_map.c			\
 		parser/parser_register.c	\
 		parser/checker.c			\
+		parser/parse_line.c			\
 		bmp_parser/parse_bmp.c
 
 ## HEADER FILES

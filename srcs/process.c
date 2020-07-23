@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 16:50:47 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/20 12:50:26 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/23 07:18:17 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	awake(t_engine *eng)
 	eng->animations = NULL;
 	eng->win.ptr = NULL;
 	eng->format = 0;
+	ft_bzero(eng->textures, 5);
 	register_builtins(eng);
 }
 

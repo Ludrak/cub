@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 16:00:14 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/15 22:50:58 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/23 08:15:12 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 # define ROTATION_SPEED	0.08F
 
 # define __FRICTION		1.3F
+# define FOV			70.0F
 
 # define ALPHABET		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -131,6 +132,7 @@ typedef struct	s_engine
 */
 void			parse_registry(t_engine *eng, char *file);
 int				parse_map(t_engine *eng, t_list *lines);
+char			**split_line(t_engine *eng, char *line);
 
 /*
 **  REGISTER HANDLER

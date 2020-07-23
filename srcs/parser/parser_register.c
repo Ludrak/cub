@@ -6,24 +6,24 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 19:04:02 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/18 17:18:18 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/23 07:29:35 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 #include "process.h"
 
-static int		get_direction(char *dir)
+static int		get_direction(t_engine *eng, char *dir)
 {
-	if (!ft_strncmp(dir, "NO", 2))
+	if (!ft_strcmp(dir, "NO") && !eng->textures[TEX_NORTH])
 		return (TEX_NORTH);
-	if (!ft_strncmp(dir, "SO", 2))
+	if (!ft_strcmp(dir, "SO") && !eng->textures[TEX_SOUTH])
 		return (TEX_SOUTH);
-	if (!ft_strncmp(dir, "EA", 2))
+	if (!ft_strcmp(dir, "EA") && !eng->textures[TEX_EAST])
 		return (TEX_EAST);
-	if (!ft_strncmp(dir, "WE", 2))
+	if (!ft_strcmp(dir, "WE") && !eng->textures[TEX_WEST])
 		return (TEX_WEST);
-	return (0);
+	return (-1);
 }
 
 static int		parse_line2(t_engine *eng, char *line)
@@ -32,11 +32,11 @@ static int		parse_line2(t_engine *eng, char *line)
 	int		status;
 
 	status = 0;
-	argv = ft_splitcharset(line, ", \t\v\f\r");
+	argv = split_line(eng, line);
 	if (ft_strstartswith(line, "RESOLUTION")
 	&& (status = check_resolution(argv))
 	&& create_window(eng, ft_atoi(argv[1]), ft_atoi(argv[2]), __PROJECT_NAME))
-		init_camera(eng, &eng->cam, 80.0F);
+		init_camera(eng, &eng->cam, FOV);
 	else if (
 	ft_strstartswith(line, "CUBE") && (status = check_id_register(argv)))
 		register_cube(eng, argv[1], ft_atoi(argv[2]));
@@ -57,21 +57,19 @@ static int		parse_line(t_engine *eng, char *line)
 	int		status;
 
 	status = 0;
-	av = ft_splitcharset(line, ", \t\v\f\r");
-	if (ft_strncmp(line, "R", 1) == 0 && (status = check_resolution(av))
+	av = split_line(eng, line);
+	if (!ft_strcmp(av[0], "R") && (status = check_resolution(av))
 	&& create_window(eng, ft_atoi(av[1]), ft_atoi(av[2]), __PROJECT_NAME))
-		init_camera(eng, &eng->cam, 80.0F);
-	else if ((!ft_strncmp(line, "NO", 2) || !ft_strncmp(line, "SO", 2)
-	|| !ft_strncmp(line, "EA", 2) || !ft_strncmp(line, "WE", 2)) &&
-	(status = check_path(av)))
-		load_from_xpm(av[1], &(eng->textures[get_direction(line)]), eng);
-	else if (!ft_strncmp(line, "C", 1) && (status = check_color(av)))
+		init_camera(eng, &eng->cam, FOV);
+	else if (get_direction(eng, av[0]) != -1 && (status = check_path(av)))
+		load_from_xpm(av[1], &(eng->textures[get_direction(eng, av[0])]), eng);
+	else if (!ft_strcmp(av[0], "C") && (status = check_color(av)))
 		eng->ceil_col = create_color(ft_atoi(av[1]),
 		ft_atoi(av[2]), ft_atoi(av[3]));
-	else if (!ft_strncmp(line, "F", 1) && (status = check_color(av)))
+	else if (!ft_strcmp(av[0], "F") && (status = check_color(av)))
 		eng->floor_col = create_color(ft_atoi(av[1]),
 		ft_atoi(av[2]), ft_atoi(av[3]));
-	else if (!ft_strncmp(line, "S", 1) && (status = check_path(av)))
+	else if (!ft_strcmp(av[0], "S") && (status = check_path(av)))
 		register_sprite(eng, av[1], 0);
 	ft_freestab(av);
 	return (status);
