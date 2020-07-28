@@ -1,6 +1,6 @@
 R  10000 10000
 
-S ./res/textures/phantom.xpm
+S  ./res/textures/forest/rock.xpm
 
 C  26, 60, 60
 F  135, 64, 5

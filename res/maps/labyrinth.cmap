@@ -2,7 +2,7 @@
 
 RESOLUTION 1280 720
 
-CUBE ./res/textures/forest/wall_forest.xpm 1
+CUBE ./res/textures/forest/wall_forest.xpm         1
 
 SPRITE ./res/textures/forest/grass-tall.xpm        A
 SPRITE ./res/textures/forest/grass-small.xpm       B

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_checker.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: luca <luca@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 16:35:07 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/11 14:32:58 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/07/27 14:28:11 by luca             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,17 @@ static int	check_horizontal(t_map map)
 	int			current;
 
 	x = 0;
-	while (x < map.size_x)
+	while (x < map.size_x + 1)
 	{
 		y = 0;
 		last = -1;
-		while (y < map.size_y)
+		while (y < map.size_y + 1)
 		{
 			current = last;
-			last = map.map[y][x]->id;
+			if (x >= map.size_x || y >= map.size_y)
+				last = -1;
+			else
+				last = map.map[y][x]->id;
 			if (current + last == CUB_VOID)
 				return (1);
 			y++;
@@ -46,14 +49,17 @@ static int	check_vertical(t_map map)
 	int			current;
 
 	y = 0;
-	while (y < map.size_y)
+	while (y < map.size_y + 1)
 	{
 		x = 0;
 		last = -1;
-		while (x < map.size_x)
+		while (x < map.size_x + 1)
 		{
 			current = last;
-			last = map.map[y][x]->id;
+			if (x >= map.size_x || y >= map.size_y)
+				last = -1;
+			else
+				last = map.map[y][x]->id;
 			if (current + last == CUB_VOID)
 				return (1);
 			x++;

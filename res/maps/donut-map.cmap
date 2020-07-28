@@ -1,0 +1,23 @@
+RESOLUTION 1280 720
+
+CUBE    ./res/textures/dungeon_wall.xpm            1
+CUBE    ./res/textures/dungeon_wall_cracked.xpm    2
+
+SPRITE  ./res/textures/forest/rock.xpm             A
+
+CEIL    ./res/textures/forest/ceil_forest.xpm
+FLOOR   ./res/textures/dungeon_floor.xpm
+
+     111
+   1200011
+  100000002
+ 20000000002
+ 2000A100001
+100001 100001
+20001   10001
+100001 100001
+ 10000100002
+ 10000000001
+  2000E0001
+   1100012
+     122
