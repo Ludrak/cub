@@ -6,7 +6,7 @@
 /*   By: lrobino <lrobino@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/10 16:00:14 by lrobino           #+#    #+#             */
-/*   Updated: 2020/07/23 08:15:12 by lrobino          ###   ########.fr       */
+/*   Updated: 2020/10/20 14:49:53 by lrobino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@
 # include <stdio.h>
 # include <sys/types.h>
 # include <math.h>
+
+# ifdef __linux__
 # include <X11/X.h>
+#endif
+
 # include "libft.h"
 # include "vectors.h"
 # include "mlx.h"
